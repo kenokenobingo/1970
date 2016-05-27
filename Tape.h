@@ -28,19 +28,23 @@ class Tape {
     int months;
     int years;
     
+    // VALUES LEVER SWITCHES
     int modeOne;
     int modeTwo;
     int modeThree;
     
+    // VALUES POTS
     int valueOne;
     int valueTwo;
     int valueThree;
     
+    // VALUES PUSH-BUTTONS
     int statusOne;
     int statusTwo;
     int statusThree;
     int statusFour;
     
+    // STATUS PUSH-BUTTONS
     bool turnOne;
     bool turnTwo;
     bool turnThree;
