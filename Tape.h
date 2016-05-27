@@ -20,6 +20,7 @@ class Tape {
     void findMode();
     void dodo();
     
+    // TIME VARIABLES
     int timestamp;
     int seconds;
     int minutes;
@@ -54,6 +55,7 @@ class Tape {
     
     int melodyCount = 1;
     
+    // COMPOSITION VALUES
     int message = 25;
     float playTime;
     float delayTime;
