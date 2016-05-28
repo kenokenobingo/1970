@@ -144,11 +144,13 @@ int Floppy::generateMIDI() {
   if (triggerChaosMode) {
     return chaosMode();
   } else if (triggerChromatic) {
+      Serial.println("FLOPPY: CHROMATIC");
       return chroma;
   } else if (triggerInter) {
-    int step;
-    step = seconds / 5 - minutes % 4;
-    return months * days + step;
+      Serial.println("FLOPPY: INTER");
+      int step;
+      step = seconds / 5 - minutes % 4;
+      return months * days + step;
   } else if (triggerWeird) {
       Serial.println("FLOPPY: WEIRD");
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
