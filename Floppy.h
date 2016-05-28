@@ -82,6 +82,12 @@ class Floppy {
     bool triggerChaosMode;
     bool triggerOneNote;
     bool triggerCadence;
+    bool triggerSine;
+    bool triggerTan;
+    bool triggerEFu;
+    bool triggerLog;
+    bool triggerSqrt;
+    bool triggerModulation;
     bool triggerCutTime;
     bool triggerJazzy;
     bool triggerChromatic;

@@ -150,11 +150,36 @@ int Floppy::generateMIDI() {
     step = seconds / 5 - minutes % 4;
     return months * days + step;
   } else if (triggerWeird) {
+      Serial.println("FLOPPY: WEIRD");
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
           return 42;
       } else {
       return sqrt(years);
       }
+  } else if (triggerSine) {
+      Serial.println("FLOPPY: SINE");
+      if(!triggerModulation) {
+         return abs(40 * sin(6 * seconds) + 30);
+      } else {
+         return abs(((40 * sin(6 * seconds)) + 30) * (25 * sin(seconds/6)));
+      }
+  } else if (triggerTan) {
+      Serial.println("FLOPPY: TAN");
+      if(!triggerModulation) {
+         return abs(40 * tan(6 * seconds) + 30);
+      } else {
+         return abs(((40 * tan(6 * seconds)) + 30) * (25 * tan(seconds/6)));
+      }
+  } else if (triggerEFu) {
+      Serial.println("FLOPPY: EXPONENTIAL");
+      return exp(seconds%5);
+  } else if (triggerLog) {
+      Serial.println("FLOPPY: LOGARITHMIC");
+      Serial.println((log(sin(seconds)) + exp(1)) * 60);    
+      return (log(sin(seconds)) + exp(1)) * 20;
+  } else if (triggerSqrt) {
+        Serial.println("FLOPPY: SQUAREROOT");
+        return sqrt(seconds) * 40;
   } else if (triggerOneNote) {
     //return (int) timestamp >> 24;
     return 44;
@@ -203,6 +228,7 @@ int Floppy::generateMIDI() {
       return 60 - 12 + b;
     }
   } else if (triggerMelody) {
+      Serial.println("FLOPPY: MELODY");
       Serial.println("MC" + melodyCount);
       if (melodyCount == 1 || melodyCount == 2 || melodyCount == 7) {
           melodyCount++;
@@ -240,9 +266,33 @@ float Floppy::generateTime() {
       return 20;
   }
     
+  if (triggerLog) {
+      return log(seconds);
+  }
+    
   if (yearIsTime) {
       return years;
   }
+    
+  if (triggerSine) {
+      return abs(365 * sin(years));
+  }
+    
+  if (triggerTan) {
+      return abs(365 * tan(years));
+  }
+    
+  if (triggerLog) {
+      return 365 * log(years);
+  }
+    
+  if (triggerSqrt) {
+      return sqrt(years) + 365;
+  }
+    
+  if (triggerEFu) {
+      return exp(years % 2) + years;
+  }    
     
   if (triggerCadence) {
       return years / months;
@@ -337,8 +387,12 @@ float Floppy::generateDelay() {
       return 0;
   }
     
-  if (triggerWeird) {
+  if (triggerSine) {
       return 0;
+  }
+    
+  if (triggerWeird) {
+      return 100;
   }
     
   if (triggerInter) {
