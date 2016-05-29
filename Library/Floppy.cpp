@@ -414,10 +414,12 @@ float Floppy::generateTime() {
   if (pickTime) {
       bool method = (bool) random(0,2);
       if (method) {
+      Serial.println("FLOPPY: PICKTIME TIMESTAMP");
       float Time[] = {50, 75, 100, 125, 150, 175, 200, 250, 300, 400, 500};
         int i = timestamp >> 28;
         return Time[i];
-     } else {   
+     } else { 
+        Serial.println("FLOPPY: PICKTIME MONTHS");
         return months * seconds;
   }
 }
