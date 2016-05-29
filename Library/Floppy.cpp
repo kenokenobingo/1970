@@ -128,64 +128,107 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
     
   // SUSTAIN SILENCE
   delay(delayTime);
-
-/*
-  FLOPPY_SERIAL.write(pin);
-  FLOPPY_SERIAL.write(nix);
-  FLOPPY_SERIAL.write(nix); */
     
   // INTERNAL LED OFF    
   digitalWrite(13, LOW);
 }
 
-// GENERATING PITCH
+/************************************************* 
+GENERATEMIDI()
+GENERATING PITCH
+INPUT: NONE
+OUTPUT: RETURNS MIDI VALUE
+*************************************************/
 int Floppy::generateMIDI() {
-  //return (int) timestamp >> 24;
-  if (triggerChaosMode) {
-    return chaosMode();
-  } else if (triggerChromatic) {
+    
+  // TRIGGERING CHAOS MODE
+  if (triggerChaosMode) 
+  {
+     Serial.println("FLOPPY: CHAOS")
+     return chaosMode();
+  }
+    
+  // TRIGGERING CHROMATIC    
+  else if (triggerChromatic) 
+  {
       Serial.println("FLOPPY: CHROMATIC");
       return chroma;
-  } else if (triggerInter) {
+  }
+      
+  // TRIGGERING INTER      
+  else if (triggerInter) 
+  {
       Serial.println("FLOPPY: INTER");
       int step;
       step = seconds / 5 - minutes % 4;
       return months * days + step;
-  } else if (triggerWeird) {
+  }
+      
+  // TRIGGERING WEIRD    
+  else if (triggerWeird) 
+  {
       Serial.println("FLOPPY: WEIRD");
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
           return 42;
       } else {
       return sqrt(years);
       }
-  } else if (triggerSine) {
+  }
+      
+  // TRIGGERING SINE    
+  else if (triggerSine) 
+  {
       Serial.println("FLOPPY: SINE");
       if(!triggerModulation) {
          return abs(40 * sin(6 * seconds) + 30);
       } else {
          return abs(((40 * sin(6 * seconds)) + 30) * (25 * sin(seconds/6)));
       }
-  } else if (triggerTan) {
-      Serial.println("FLOPPY: TAN");
+  }
+      
+  // TRIGGERING TANGENT   
+  else if (triggerTan) 
+  {
+      Serial.println("FLOPPY: TANGENT");
       if(!triggerModulation) {
          return abs(40 * tan(6 * seconds) + 30);
       } else {
          return abs(((40 * tan(6 * seconds)) + 30) * (25 * tan(seconds/6)));
       }
-  } else if (triggerEFu) {
+  }
+      
+  // TRIGGERING EXPONENTIAL     
+  else if (triggerEFu)
+  {
       Serial.println("FLOPPY: EXPONENTIAL");
       return exp(seconds%5);
-  } else if (triggerLog) {
+  }
+      
+  // TRIGGERING LOGARITHMIC      
+  else if (triggerLog)
+  {
       Serial.println("FLOPPY: LOGARITHMIC");
       Serial.println((log(sin(seconds)) + exp(1)) * 60);    
       return (log(sin(seconds)) + exp(1)) * 20;
-  } else if (triggerSqrt) {
-        Serial.println("FLOPPY: SQUAREROOT");
+  }
+  
+  // TRIGGERING SQUARE-ROOT      
+  else if (triggerSqrt)
+  {
+        Serial.println("FLOPPY: SQUARE-ROOT");
         return sqrt(seconds) * 40;
-  } else if (triggerOneNote) {
+  }
+  
+  // TRIGGERIN ONE NOTE
+  else if (triggerOneNote) 
+  {
+    Serial.println("FLOPPY: CADENCE");
     //return (int) timestamp >> 24;
     return 44;
-  } else if (triggerCadence && !blueNote) {
+  }
+  
+  // TRIGGERING CADDENCE
+  else if (triggerCadence && !blueNote) {
     if (count == 0) {
       generateB();
       return 44 - 12 + b;
@@ -200,7 +243,11 @@ int Floppy::generateMIDI() {
     } else if (count == 3) {
       return 44 - 12 + b;
     }
-  } else if (triggerCadence && blueNote) {
+  }
+    
+  // TRIGGERING JAZZY
+  else if (triggerCadence && blueNote) {
+    Serial.println("FLOPPY: JAZZY");  
     if (improvisation) {
       int i;
         
@@ -209,16 +256,16 @@ int Floppy::generateMIDI() {
         i = (timestamp >> 28) + random (0,2);
         i = i - count;
 
-      if (count == 0) {
-        generateB();
-        return Jazzy[i] - 12 + b;
-      } else if (count == 1) {
-        return Jazzy[i] - 12 + b;
-      } else if (count == 2) {
-        return Jazzy[i] - 12 + b;
-      } else if (count == 3) {
-        return Jazzy[i] - 12 + b;
-      }
+       if (count == 0) {
+         generateB();
+         return Jazzy[i] - 12 + b;
+       } else if (count == 1) {
+         return Jazzy[i] - 12 + b;
+       } else if (count == 2) {
+         return Jazzy[i] - 12 + b;
+       } else if (count == 3) {
+         return Jazzy[i] - 12 + b;
+       }
     } else if (count == 0) {
       generateB();
       return 44 - 12 + b;
@@ -229,25 +276,31 @@ int Floppy::generateMIDI() {
     } else if (count == 3) {
       return 60 - 12 + b;
     }
-  } else if (triggerMelody) {
-      Serial.println("FLOPPY: MELODY");
-      Serial.println("MC" + melodyCount);
-      if (melodyCount == 1 || melodyCount == 2 || melodyCount == 7) {
-          melodyCount++;
-          return 46;
-      } else if (melodyCount == 3 || melodyCount == 6) {
-          melodyCount++;
-          return 47;
-      } else if (melodyCount == 4 || melodyCount == 5) {
-          melodyCount++;
-          return 49;
+  }
+    
+  // TRIGGERING MELODY
+  else if (triggerMelody) {
+     Serial.println("FLOPPY: MELODY");
+     Serial.println("MC" + melodyCount);
+     if (melodyCount == 1 || melodyCount == 2 || melodyCount == 7) {
+        melodyCount++;
+        return 46;
+     } else if (melodyCount == 3 || melodyCount == 6) {
+        melodyCount++;
+        return 47;
+     } else if (melodyCount == 4 || melodyCount == 5) {
+         melodyCount++;
+         return 49;
       } else {
-          melodyCount = 1;
-          return 0;
+         melodyCount = 1;
+         return 0;
       }
       
       return 0;
   }
+    
+    
+    
    return 44; 
 }
 
@@ -476,18 +529,36 @@ return false;
 }
 
 // CHAOS MODE
+// OUTPUT: RETURNS MIDI VALUE FOR PITCH
+
 int Floppy::chaosMode() {
-  return random(24, 92);
+  int val;
+  int mm = minutes - months;
+  int sh = seconds + hours;
+
+  val = random(mm, sh);
+    
+  return val;
 }
 
-// SILENCE THE DRIVE
+/*
+SENDNULL()
+SILENCING THE DRIVE
+INPUT: NONE
+OUTPUT: NONE
+*/
 void Floppy::sendNull() {
   FLOPPY_SERIAL.write(pin);
   FLOPPY_SERIAL.write(nix);
   FLOPPY_SERIAL.write(nix);
 }
 
-// STEPS BETWEEN CADENCES
+/************************************************
+GENERATEB()
+CALCULATING STEPS BETWEEN CADENCES
+INPUT: NONE
+OUTPUT: NONE
+*************************************************/
 void Floppy::generateB() {
   float Steps[] = { -7, -5, -4, 0, 4, 5, 7};
   //int i = timestamp % 5;

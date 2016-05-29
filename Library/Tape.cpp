@@ -125,18 +125,24 @@ void Tape::main(int abc, int sec, int min, int h, int d, int m, int y, int modOn
 }
 
 
-// GENERATING PITCH
-// OUTPUT: RETURNS MIDI VALUE
-
+/************************************************* 
+GENERATEMIDI()
+GENERATING PITCH
+INPUT: NONE
+OUTPUT: RETURNS MIDI VALUE
+*************************************************/
 int Tape::generateMIDI() {
     
     // TRIGGERING CHAOS MODE
-    if (triggerChaosMode) {
+    if (triggerChaosMode) 
+    {
       Serial.println("TAPE: CHAOS");
       return chaosMode();
+    }
         
     // TRIGGERING HICK HACK        
-  } else if (triggerHickHack) {
+    else if (triggerHickHack) 
+    {
       Serial.println("TAPE: HICK HACK");
       if (seconds == 1 || seconds == 2 || seconds == 3 || seconds == 4 || seconds == 5 || seconds == 30 || seconds == 31 || seconds == 32 || seconds == 33 || seconds == 34 || seconds == 35) {
           return seconds * 2;
@@ -144,18 +150,22 @@ int Tape::generateMIDI() {
           return seconds;
       }
       return 0;
+    }
         
     // TRIGGERING JUMPING VALUES    
-  } else if (triggerJump) {
+    else if (triggerJump) 
+    {
       Serial.println("TAPE: JUMP");
       
       int x = months * random(0, months); 
       int f = 2;
       
       return (days + x) * f;
+    }
         
     // TRIGGERING SINE MODE
-  } else if (triggerSine) {
+    else if (triggerSine)
+    {
       Serial.println("TAPE: SINE");
       //return sin(seconds/minutes) * 256;
       if(!triggerModulation) {
@@ -163,32 +173,49 @@ int Tape::generateMIDI() {
       } else {
          return abs((128 * sin(6 * seconds)) * (100 * sin(seconds/6)));
       }
+    }
         
     // TRIGGERING TANGENT MODE    
-  } else if (triggerTan) {
+    else if (triggerTan) 
+    {
       Serial.println("TAPE: TANGENT");
       return abs(128 * tan(6 * seconds));
+    }
         
     // TRIGGERING EXPONENTIAL MODE
-  } else if (triggerLog) {
+    else if (triggerLog) 
+    {
       Serial.println("TAPE: LOGARITHMIC");
       Serial.println((log(sin(seconds)) + exp(1)) * 60);    
       return (log(sin(seconds)) + exp(1)) * 60;
-  } else if (triggerSqrt + months) {
+    }
+  
+    // TRIGGERING SQUARE-ROOT
+    else if (triggerSqrt) {
+        Serial.println("TAPE: SQAURE-ROOT");
         return sqrt(seconds) * 40;
-  } else if (triggerEFu) {
+    }
+   
+   // TRIGGERING EXPONENTIAL
+   else if (triggerEFu) 
+   {
+      Serial.println("TAPE: EXPONENTIAL");
       return exp(seconds%5);
+   }
         
-    // TRIGGERING BREAK MODE
-  } else if (triggerBreak) {
+   // TRIGGERING BREAK MODE
+   else if (triggerBreak) 
+   {
       Serial.println("TAPE: BREAK");
       for(int i=0; i<=seconds+months; i++) {
       return seconds * 2;
       }
       return 0;
+   }
         
     // TRIGGERING STUTTERING MODE
-  } else if (triggerStutter) {
+   else if (triggerStutter) 
+   {
       Serial.println("TAPE: STUTTER");
       
       counting++;
@@ -204,59 +231,73 @@ int Tape::generateMIDI() {
       return factor; }
 
       return 0;
+   }
         
     // TRIGGERING NOTHING
-  } else if (triggerNull) {
+   else if (triggerNull) 
+   {
       Serial.println("TAPE: NULL");
       return 0;
+   }
         
     // TRIGGERING CHROMATIC MODE    
-  } else if (triggerChromatic) {
+   else if (triggerChromatic) 
+   {
       Serial.println("TAPE: CHROMA");
       return chroma;
+   }
         
     // TRIGGERING INTER MODE
-  } else if (triggerInter) {
-    Serial.println("TAPE: INTER");
-    int step;
-    step = seconds / 5 - minutes % 4;
-    return months * days + step;
+   else if (triggerInter) 
+   {
+      Serial.println("TAPE: INTER");
+      int step;
+      step = seconds / 5 - minutes % 4;
+      return months * days + step;
+   }
         
     // TRIGGERING WEIRD MODE
-  } else if (triggerWeird) {
+   else if (triggerWeird) 
+   {
       Serial.println("TAPE: WEIRD");
       if (seconds < 60 && seconds > 30) {
           return 42;
       } else {
       return sqrt(years);
       }
+   }
         
     // TRIGGERING ONE NOTE MODE
-  } else if (triggerOneNote) {
-      Serial.println("TAPE: ONE NOTE");
+   else if (triggerOneNote) 
+   {
+    Serial.println("TAPE: ONE NOTE");
     //return (int) timestamp >> 24;
     return 44;
+   }
         
-    // TRIGGERING CADENCE MODE
-  } else if (triggerCadence && !blueNote) {
-      Serial.println("TAPE: CADENCE");
-    if (count == 0) {
-      generateB();
-      return 44 - 12 + b;
-    } else if (count == 1) {
-        if (minor) {
-            return 47 - 12 + b;
-        } else {
-            return 48 - 12 + b;
-        }
-    } else if (count == 2) {
+   // TRIGGERING CADENCE MODE
+   else if (triggerCadence && !blueNote) 
+   {
+     Serial.println("TAPE: CADENCE");
+     if (count == 0) {
+       generateB();
+       return 44 - 12 + b;
+     } else if (count == 1) {
+         if (minor) {
+             return 47 - 12 + b;
+         } else {
+             return 48 - 12 + b;
+         }
+     } else if (count == 2) {
       return 51 - 12 + b;
-    } else if (count == 3) {
-      return 44 - 12 + b;
-    }
+     } else if (count == 3) {
+       return 44 - 12 + b;
+     }
+   }
         
-    // TRIGGERING JAZZY MODE
-  } else if (triggerCadence && blueNote) {
+   // TRIGGERING JAZZY MODE
+   else if (triggerCadence && blueNote) 
+   {
       Serial.println("TAPE: JAZZY");
       
       counting++;
@@ -265,7 +306,7 @@ int Tape::generateMIDI() {
       if (counting > 2) {
           counting = 0;
       } 
-      
+   }      
       
 if (counting == 1 || counting == 2) {
       if (improvisation) {
@@ -320,9 +361,9 @@ if (counting == 1 || counting == 2) {
       return 190;
 }
 
+
 // CHAOS MODE
 // OUTPUT: RETURNS MIDI VALUE FOR PITCH
-
 int Tape::chaosMode() {
   return random(seconds, minutes);
 }
@@ -332,7 +373,12 @@ void Tape::sendNull() {
   TAPE_SERIAL.write(nix);
 }
 
-// STEPS BETWEEN CADENCES
+/************************************************
+GENERATEB()
+CALCULATING STEPS BETWEEN CADENCES
+INPUT: NONE
+OUTPUT: NONE
+*************************************************/
 void Tape::generateB() {
   float Steps[] = { -7, -5, -4, 0, 4, 5, 7};
   //int i = timestamp % 5;

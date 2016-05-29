@@ -88,7 +88,7 @@ class Tape {
 
     // COMPOSITION BOOLEANS
     bool device_reset;
-    bool triggerChaosMode;
+    bool triggerChaosMode = true;
     bool triggerHickHack;
     bool triggerBreak;
     bool triggerStutter;
