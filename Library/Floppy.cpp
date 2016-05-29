@@ -161,8 +161,9 @@ int Floppy::generateMIDI() {
   {
       Serial.println("FLOPPY: INTER");
       int step;
-      step = seconds / 5 - minutes % 4;
-      return months * days + step;
+      int f = 2;
+      step = (0.5 * (minutes + seconds) / 10);
+      return f * days + step;
   }
       
   // TRIGGERING WEIRD    
@@ -170,9 +171,11 @@ int Floppy::generateMIDI() {
   {
       Serial.println("FLOPPY: WEIRD");
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
-          return 42;
+        return 42;
       } else {
-      return sqrt(years);
+        int root; 
+        root = (int) sqrt(years + seconds + minutes + hours);
+        return root;
       }
   }
       

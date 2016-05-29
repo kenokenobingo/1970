@@ -76,7 +76,6 @@ void Tape::main(int abc, int sec, int min, int h, int d, int m, int y, int modOn
   // INTERNAL LED ON
   digitalWrite(13, HIGH);
 
-
   // PLAYING NOTES BACKWARDS
   if (backwards) {
     if (count > 0) {
