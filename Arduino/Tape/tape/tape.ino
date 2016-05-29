@@ -1,4 +1,16 @@
-/* TAPE RECEIVER */
+/*************************************************
+
+
+==== 1970 ====
+
+TAPE RECEIVER: TAPE.INO
+KENO WESTHOFF
+HOCHSCHULE FÜR KÜNSTE BREMEN
+2016
+
+
+*************************************************/
+
 
 // MOTOR PINS AND LEVELS
 byte PWM_out_level;

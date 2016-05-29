@@ -1,4 +1,16 @@
-/* PRINTER RECEIVER */
+/*************************************************
+
+
+==== 1970 ====
+
+PRINTER RECEIVER: PRINTER.INO
+KENO WESTHOFF
+HOCHSCHULE FÜR KÜNSTE BREMEN
+2016
+
+
+*************************************************/
+
 
 // PRINTER PINS
 const int d0 = 4;

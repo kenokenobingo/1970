@@ -1,3 +1,18 @@
+/*************************************************
+
+
+==== 1970 ====
+
+FLOPPY RECEIVER: MOPPY.INO
+ORIGINALLY BY SAMMYIAM ON GITHUB
+KENO WESTHOFF
+HOCHSCHULE FÜR KÜNSTE BREMEN
+2016
+
+
+*************************************************/
+
+
 #include <TimerOne.h>
 
 boolean firstRun = true; // Used for one-run-only stuffs;

@@ -1,3 +1,17 @@
+/*************************************************
+
+
+==== 1970 ====
+
+TEENSY PROGRAM: _1970.INO
+KENO WESTHOFF
+HOCHSCHULE FÜR KÜNSTE BREMEN
+2016
+
+
+*************************************************/
+
+
 #include <RTClib.h>
 #include <Wire.h>
 

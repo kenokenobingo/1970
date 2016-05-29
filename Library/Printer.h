@@ -1,3 +1,17 @@
+/*************************************************
+
+
+==== 1970 ====
+
+PRINTER LIBRARY: PRINTER.H
+KENO WESTHOFF
+HOCHSCHULE FÜR KÜNSTE BREMEN
+2016
+
+
+*************************************************/
+
+
 #ifndef Printer_H
 #define Printer_H
 

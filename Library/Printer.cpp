@@ -1,3 +1,17 @@
+/*************************************************
+
+
+==== 1970 ====
+
+PRINTER LIBRARY: PRINTER.CPP
+KENO WESTHOFF
+HOCHSCHULE FÜR KÜNSTE BREMEN
+2016
+
+
+*************************************************/
+
+
 #include "Printer.h"
 
 //EXTERNAL LIBRARIES
