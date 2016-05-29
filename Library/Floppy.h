@@ -1,3 +1,17 @@
+/*************************************************
+
+
+==== 1970 ====
+
+FLOPPY LIBRARY: FLOPPY.H
+KENO WESTHOFF
+HOCHSCHULE FÜR KÜNSTE BREMEN
+2016
+
+
+*************************************************/
+
+
 #ifndef Floppy_H
 #define Floppy_H
 

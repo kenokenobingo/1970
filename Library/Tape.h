@@ -1,3 +1,17 @@
+/*************************************************
+
+
+==== 1970 ====
+
+TAPE LIBRARY: TAPE.H
+KENO WESTHOFF
+HOCHSCHULE FÜR KÜNSTE BREMEN
+2016
+
+
+*************************************************/
+
+
 #ifndef Tape_H
 #define Tape_H
 

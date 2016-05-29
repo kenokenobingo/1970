@@ -1,23 +1,49 @@
+/*************************************************
+
+
+==== 1970 ====
+
+FLOPPY LIBRARY: FLOPPY.CPP
+KENO WESTHOFF
+HOCHSCHULE FÜR KÜNSTE BREMEN
+2016
+
+
+*************************************************/
+
+
 #include "Floppy.h"
+
 
 // EXTERNAL LIBRARIES
 #include <util/delay.h>
 
+
 // DEFINING SERIAL PORT
 #define FLOPPY_SERIAL Serial1
+
 
 const byte pin = 2;
 const byte nix = 0;
 const byte reset = 100;
 
-// <<CONSTRUCTOR>>
+
+/*************************************************
+<< CONSTRUCTOR >>
+*************************************************/
+
 Floppy::Floppy(){
     FLOPPY_SERIAL.begin(9600);
     pinMode(13, OUTPUT);
 }
  
-// <<DESTRUCTOR>>
+
+/*************************************************
+<< DESTRUCTOR >>
+*************************************************/
+
 Floppy::~Floppy(){ /* NOTHING TO DESTRUCT */ }
+
 
 void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int modOne, int modTwo, int modThree, int vOne, int vTwo, int vThree, int statOne, int statTwo, int statThree, int statFour) {
     
@@ -134,12 +160,14 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
   digitalWrite(13, LOW);
 }
 
+
 /************************************************* 
 GENERATEMIDI()
 GENERATING PITCH
 INPUT: NONE
-OUTPUT: RETURNS MIDI VALUE
+OUTPUT: RETURNS MIDI VALUE, INTEGER
 *************************************************/
+
 int Floppy::generateMIDI() {
     
   // TRIGGERING CHAOS MODE
@@ -522,7 +550,14 @@ float Floppy::generateDelay() {
   }
 }
 
-// DETERMINING IF TIME WARP SHOULD BE TRIGGERED (TRIGGERCUTTIME)
+
+/************************************************
+GETX()
+DETERMINING IF TIME WARP SHOULD BE TRIGGERED (TRIGGERCUTTIME)
+INPUT: NONE
+OUTPUT: TRIGGER TRUE OR FALSE, BOOLEAN
+*************************************************/
+
 bool Floppy::getX() {
   if (count == 0) {
         return true;
@@ -538,8 +573,13 @@ bool Floppy::getX() {
 return false;
 }
 
-// CHAOS MODE
-// OUTPUT: RETURNS MIDI VALUE FOR PITCH
+
+/************************************************
+CHAOSMODE()
+CHAOS MODE
+INPUT: NONE
+OUTPUT: RETURNS MIDI VALUE FOR PITCH, INTEGER
+*************************************************/
 
 int Floppy::chaosMode() {
   int val;
@@ -551,17 +591,20 @@ int Floppy::chaosMode() {
   return val;
 }
 
-/*
+
+/************************************************
 SENDNULL()
 SILENCING THE DRIVE
 INPUT: NONE
 OUTPUT: NONE
-*/
+*************************************************/
+
 void Floppy::sendNull() {
   FLOPPY_SERIAL.write(pin);
   FLOPPY_SERIAL.write(nix);
   FLOPPY_SERIAL.write(nix);
 }
+
 
 /************************************************
 GENERATEB()
@@ -569,6 +612,7 @@ CALCULATING STEPS BETWEEN CADENCES
 INPUT: NONE
 OUTPUT: NONE
 *************************************************/
+
 void Floppy::generateB() {
   float Steps[] = { -7, -5, -4, 0, 4, 5, 7};
   //int i = timestamp % 5;
@@ -589,6 +633,14 @@ void Floppy::generateB() {
       b = b + Steps[i];
   }
 }
+
+
+/************************************************
+DOTIMESHIFT()
+TIMESHIFT
+INPUT: NONE
+OUTPUT: NONE
+*************************************************/
 
 void Floppy::doTimeshift () {
   if (timeshift) {

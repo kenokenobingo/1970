@@ -1,3 +1,17 @@
+/*************************************************
+
+
+==== 1970 ====
+
+TAPE LIBRARY: TAPE.CPP
+KENO WESTHOFF
+HOCHSCHULE FÜR KÜNSTE BREMEN
+2016
+
+
+*************************************************/
+
+
 #include "Tape.h"
 
 // EXTERNAL LIBRARIES
