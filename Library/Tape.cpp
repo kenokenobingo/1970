@@ -3,6 +3,7 @@
 // EXTERNAL LIBRARIES
 #include <util/delay.h>
 
+// DEFINING SERIAL PORT
 #define TAPE_SERIAL Serial2
 
 const byte pin = 2;
@@ -16,7 +17,7 @@ Tape::Tape(){
 }
  
 // <<DESTRUCTOR>>
-Tape::~Tape(){/*nothing to destruct*/}
+Tape::~Tape(){ /* NOTHING TO DESTRUCT */ }
 
 void Tape::main(int abc, int sec, int min, int h, int d, int m, int y, int modOne, int modTwo, int modThree, int vOne, int vTwo, int vThree, int statOne, int statTwo, int statThree, int statFour) {
     
@@ -355,7 +356,6 @@ if (counting == 1 || counting == 2) {
       }
   } else {
       return 10;
-  }
   }
       
       return 190;

@@ -3,6 +3,7 @@
 // EXTERNAL LIBRARIES
 #include <util/delay.h>
 
+// DEFINING SERIAL PORT
 #define FLOPPY_SERIAL Serial1
 
 const byte pin = 2;
@@ -16,7 +17,7 @@ Floppy::Floppy(){
 }
  
 // <<DESTRUCTOR>>
-Floppy::~Floppy(){/*nothing to destruct*/}
+Floppy::~Floppy(){ /* NOTHING TO DESTRUCT */ }
 
 void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int modOne, int modTwo, int modThree, int vOne, int vTwo, int vThree, int statOne, int statTwo, int statThree, int statFour) {
     
@@ -42,7 +43,7 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
     statusThree = statThree;
     statusFour = statFour;
 
-    findMode();
+    //findMode();
     
   while (device_reset == 0) {
     FLOPPY_SERIAL.write(reset);
@@ -59,7 +60,7 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
     _delay_ms(500);
   }
     
-  //message = generateMIDI();
+  message = generateMIDI();
 
   playTime = generateTime();
   delayTime = generateDelay();
@@ -144,7 +145,7 @@ int Floppy::generateMIDI() {
   // TRIGGERING CHAOS MODE
   if (triggerChaosMode) 
   {
-     Serial.println("FLOPPY: CHAOS")
+     Serial.println("FLOPPY: CHAOS");
      return chaosMode();
   }
     
@@ -227,7 +228,7 @@ int Floppy::generateMIDI() {
     return 44;
   }
   
-  // TRIGGERING CADDENCE
+  // TRIGGERING CADENCE
   else if (triggerCadence && !blueNote) {
     if (count == 0) {
       generateB();
@@ -283,17 +284,21 @@ int Floppy::generateMIDI() {
      Serial.println("FLOPPY: MELODY");
      Serial.println("MC" + melodyCount);
      if (melodyCount == 1 || melodyCount == 2 || melodyCount == 7) {
+        Serial.println("M: 46");
         melodyCount++;
         return 46;
      } else if (melodyCount == 3 || melodyCount == 6) {
+        Serial.println("M: 47");
         melodyCount++;
         return 47;
      } else if (melodyCount == 4 || melodyCount == 5) {
-         melodyCount++;
-         return 49;
+        Serial.println("M: 49");
+        melodyCount++;
+        return 49;
       } else {
-         melodyCount = 1;
-         return 0;
+        Serial.println("M: RESET"); 
+        melodyCount = 1;
+        return 44;
       }
       
       return 0;
@@ -354,7 +359,8 @@ float Floppy::generateTime() {
   }
     
   if (triggerMelody) {
-      return 10;
+      int f = 50;
+      return hours * f;
   }
 
   if (accelerating) {
@@ -439,7 +445,8 @@ float Floppy::generateDelay() {
   float x;
     
   if (triggerMelody) {
-      return 0;
+      int f = 10;
+      return hours * f;
   }
     
   if (triggerSine) {
@@ -599,7 +606,7 @@ void Floppy::doTimeshift () {
   }
 }
 
-// READ INPUTS
+/*// READ INPUTS
 // CHOOSING MODE
 void Floppy::findMode() {
     // LEVER SWITCH #1
@@ -715,4 +722,4 @@ if (!turnFour) {
  
 // GENERATE MESSAGE
  message = generateMIDI();
-}
+} */
