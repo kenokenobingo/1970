@@ -254,6 +254,12 @@ int Floppy::generateMIDI() {
         Serial.println("FLOPPY: SQUARE-ROOT");
         return sqrt(seconds) * 40;
   }
+    
+  // TRIGGERING THE POWER [SIC!]
+  else if (triggerPow) {
+      Serial.println("FLOPPY: POWER");
+      return pow(abs(seconds - minutes), 2);
+  }
   
   // TRIGGERIN ONE NOTE
   else if (triggerOneNote) 
@@ -339,12 +345,18 @@ int Floppy::generateMIDI() {
       return 0;
   }
     
-    
-    
+   // FALLBACK
    return 44; 
 }
 
-// GENERATE DURATION OF A NOTE
+
+/************************************************* 
+GENERATETIME()
+GENERATING DURATION OF A NOTE
+INPUT: NONE
+OUTPUT: RETURNS DURATION OF A NOTE, FLOAT
+*************************************************/
+
 float Floppy::generateTime() {
   float x;
     
@@ -371,6 +383,11 @@ float Floppy::generateTime() {
     
   if (triggerSine) {
       return abs(365 * sin(years));
+  }
+    
+  // TRIGGERING THE POWER [SIC!]
+  if (triggerPow) {
+      return pow(abs(seconds - minutes), 2);
   }
     
   if (triggerTan) {
