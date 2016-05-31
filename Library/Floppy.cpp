@@ -387,7 +387,8 @@ float Floppy::generateTime() {
     
   // TRIGGERING THE POWER [SIC!]
   if (triggerPow) {
-      return pow(abs(seconds - minutes), 2);
+      int f = 2;
+      return pow(abs(seconds - minutes), f);
   }
     
   if (triggerTan) {

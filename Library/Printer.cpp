@@ -24,13 +24,21 @@ HOCHSCHULE FÜR KÜNSTE BREMEN
 //DEFINE SERIAL PORT
 #define PRINTER_SERIAL Serial3
 
-//<<constructor>>
+
+/*************************************************
+<< CONSTRUCTOR >>
+*************************************************/
+
 Printer::Printer(){
     PRINTER_SERIAL.begin(9600);
     pinMode(13, OUTPUT);
 }
  
-//<<destructor>>
+
+/*************************************************
+<< DESTRUCTOR >>
+*************************************************/
+
 Printer::~Printer(){/*nothing to destruct*/}
 
 void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int modOne, int modTwo, int modThree, int vOne, int vTwo, int vThree, int statOne, int statTwo, int statThree, int statFour) {
@@ -56,7 +64,7 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
     statusThree = statThree;
     statusFour = statFour;
     
-    findMode();
+    //findMode();
 
   while (device_reset == 0) {
 
@@ -136,7 +144,14 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
   //delay(delayTime);
 }
 
-// GENERATING PITCH
+
+/************************************************* 
+GENERATEMIDI()
+GENERATING PITCH
+INPUT: NONE
+OUTPUT: RETURNS MIDI VALUE, INTEGER
+*************************************************/
+
 int Printer::generateMIDI() {
   //return (int) timestamp >> 24;
 if (triggerOneNote) {
@@ -146,7 +161,57 @@ if (triggerOneNote) {
     return chaosMode();
   } else if (triggerChromatic) {
       return chroma;
-  } else if (triggerInter) {
+  }
+    
+   // TRIGGERING SINE MODE
+   else if (triggerSine)
+   {
+     Serial.println("TAPE: SINE");
+     //return sin(seconds/minutes) * 256;
+     if(!triggerModulation) {
+      return abs(128 * sin(6 * seconds));
+     } else {
+       return abs((128 * sin(6 * seconds)) * (100 * sin(seconds/6)));
+      }
+    }
+        
+    // TRIGGERING TANGENT MODE    
+    else if (triggerTan) 
+    {
+      Serial.println("TAPE: TANGENT");
+      return abs(128 * tan(6 * seconds));
+    }
+        
+    // TRIGGERING EXPONENTIAL MODE
+    else if (triggerLog) 
+    {
+      Serial.println("TAPE: LOGARITHMIC");
+      Serial.println((log(sin(seconds)) + exp(1)) * 60);    
+      return (log(sin(seconds)) + exp(1)) * 60;
+    }
+  
+    // TRIGGERING SQUARE-ROOT
+    else if (triggerSqrt) {
+        Serial.println("TAPE: SQAURE-ROOT");
+        return sqrt(seconds) * 40;
+    }
+   
+   // TRIGGERING EXPONENTIAL
+   else if (triggerEFu) 
+   {
+      Serial.println("TAPE: EXPONENTIAL");
+      return exp(seconds%5);
+   }
+    
+   // TRIGGERING THE POWER [SIC!]
+   else if (triggerPow) 
+   {
+      Serial.println("TAPE: POWER"); 
+      int f = 2;
+      return pow(abs(seconds - minutes), 2);
+   }
+    
+    else if (triggerInter) {
     int step;
     step = seconds / 5 - minutes % 4;
     return months * days + step;
@@ -465,6 +530,7 @@ void Printer::generateB() {
   }
 }*/
 
+/*
 void Printer::findMode() {
     Serial.println("PRINTER ENTERED FINDMODE FUNKTION." );
     
@@ -564,4 +630,4 @@ if (!turnFour) {
 }
     
  message = generateMIDI();
-}
+} */

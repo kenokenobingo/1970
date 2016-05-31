@@ -220,6 +220,14 @@ int Tape::generateMIDI() {
       Serial.println("TAPE: EXPONENTIAL");
       return exp(seconds%5);
    }
+    
+   // TRIGGERING THE POWER [SIC!]
+   else if (triggerPow) 
+   {
+      Serial.println("TAPE: POWER"); 
+      int f = 2;
+      return pow(abs(seconds - minutes), 2);
+   }
         
    // TRIGGERING BREAK MODE
    else if (triggerBreak) 

@@ -86,6 +86,13 @@ class Printer {
     bool triggerChromatic;
     bool triggerWeird;
     bool triggerInter;
+    bool triggerSine;
+    bool triggerTan;
+    bool triggerEFu;
+    bool triggerLog;
+    bool triggerSqrt;
+    bool triggerModulation;
+    bool triggerPow;
     bool pickTime;
     bool accelerating;
     bool decelerating;

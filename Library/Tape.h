@@ -116,6 +116,7 @@ class Tape {
     bool triggerLog;
     bool triggerSqrt;
     bool triggerModulation;
+    bool triggerPow;
     bool triggerJump;
     bool triggerNull;
     bool triggerOneNote;
