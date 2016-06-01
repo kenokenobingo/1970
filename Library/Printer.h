@@ -104,6 +104,8 @@ class Printer {
     bool minor;
     bool yearIsTime;
     
+    /*
+    // PIN BYTES
     byte n0;
     byte n1;
     byte n2;
@@ -114,6 +116,7 @@ class Printer {
     byte n7;
     byte strobe;
     byte autofd;
+    */
 };
 
 #endif

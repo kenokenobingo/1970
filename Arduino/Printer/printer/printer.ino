@@ -1,15 +1,24 @@
 /*************************************************
 
 
-==== 1970 ====
+  ==== 1970 ====
 
-PRINTER RECEIVER: PRINTER.INO
-KENO WESTHOFF
-HOCHSCHULE FÜR KÜNSTE BREMEN
-2016
+  PRINTER RECEIVER: PRINTER.INO
+  KENO WESTHOFF
+  HOCHSCHULE FÜR KÜNSTE BREMEN
+  2016
 
 
 *************************************************/
+
+
+
+// INCLUDE TIMER LIBRARY
+#include <Timer.h>
+
+
+// INITIALISE TIMER
+Timer t;
 
 
 // PRINTER PINS
@@ -38,7 +47,17 @@ byte autofdNumber;
 byte message;
 int globalCount;
 
+
+/************************************************* 
+SETUP()
+SETTING UP PINS AND SERIAL COMMUNICATION
+INPUT: NONE
+OUTPUT: NONE
+*************************************************/
+
 void setup() {
+
+  // SETTING UP PINS
   pinMode(d0, OUTPUT);
   pinMode(d1, OUTPUT);
   pinMode(d2, OUTPUT);
@@ -49,8 +68,19 @@ void setup() {
   pinMode(d7, OUTPUT);
   pinMode(strobe, OUTPUT);
   pinMode(autofd, OUTPUT);
+
+  // SETTING UP SERIAL COMMUNICATION
   Serial.begin(9600);
 }
+
+
+
+/************************************************* 
+LOOP()
+READING MESSAGE AND TRIGGERING COMPOSITION
+INPUT: NONE
+OUTPUT: NONE
+*************************************************/
 
 void loop() {
   if (Serial.available() > 0) {
@@ -95,29 +125,33 @@ void loop() {
     for (int i = 0; i < 10; i++) {
       if (message > 25) {
         dance();
-        delay(360);
+        delay(2);
         Serial.println("DANCE ACTIVATED.");
       } else  {
         infinity();
-        delay(100);
+        delay(2);
         Serial.println("INFINITY ACTIVATED.");
       }
     }
     if (message < 45) {
-      playGrafikBeat();
-      delay(420);
+      t.every(500, playGrafikBeat);
+      delay(2);
       Serial.println("GRAFIK-BEAT ACTIVATED.");
     } else {
       doIt();
-      delay(240);
+      delay(2);
       Serial.println("DO IT ACTIVATED.");
     }
+  }
+
+  if (message == 0) {
+    t.every(10000, playNull);
   }
 
   if (globalCount == 5 && message > 50) {
     goingCrazy();
     Serial.println("GOING CRAZY ACTIVATED.");
-    delay(1000);
+    delay(2);
   }
 
   if (globalCount > 10) {
@@ -126,10 +160,40 @@ void loop() {
 
   globalCount++;
   delay(message * 10);
+
+  // UPDATE TIMER
+  t.update();
 }
 
 void playGrafikBeat() {
   // ESC
+
+  if (message > 35) {
+    digitalWrite(d0, LOW);
+    digitalWrite(d1, HIGH);
+    digitalWrite(d2, LOW);
+    digitalWrite(d3, HIGH);
+    digitalWrite(d4, HIGH);
+    digitalWrite(d5, LOW);
+    digitalWrite(d6, LOW);
+    digitalWrite(d7, HIGH);
+    digitalWrite(strobe, LOW);
+
+    delay(10);
+
+    digitalWrite(strobe, HIGH);
+    digitalWrite(d0, LOW);
+    digitalWrite(d1, LOW);
+    digitalWrite(d2, LOW);
+    digitalWrite(d3, LOW);
+    digitalWrite(d4, LOW);
+    digitalWrite(d5, LOW);
+    digitalWrite(d6, LOW);
+    digitalWrite(d7, LOW);
+
+    delay(10);
+  }
+
   digitalWrite(d0, LOW);
   digitalWrite(d1, LOW);
   digitalWrite(d2, LOW);
@@ -963,3 +1027,27 @@ void goingCrazy() {
 
   delay(globalCount * PI);
 }
+
+void playNull() {
+    // 9
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, HIGH);
+  digitalWrite(d2, HIGH);
+  digitalWrite(d3, HIGH);
+  digitalWrite(d4, HIGH);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, HIGH);
+  digitalWrite(d7, HIGH);
+  digitalWrite(strobe, LOW);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+}
+

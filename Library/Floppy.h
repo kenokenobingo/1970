@@ -105,7 +105,7 @@ class Floppy {
     bool triggerEFu;
     bool triggerLog;
     bool triggerSqrt;
-    bool triggerPow = true;
+    bool triggerPow;
     bool triggerModulation;
     bool triggerCutTime;
     bool triggerJazzy;
