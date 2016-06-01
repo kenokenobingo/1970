@@ -132,8 +132,8 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
   }
 
   chroma++;
-    if (chroma > 72) {
-        chroma = 25;
+    if (chroma > 130) {
+        chroma = 0;
     }
 
   //doTimeshift();
@@ -211,17 +211,30 @@ if (triggerOneNote) {
       return pow(abs(seconds - minutes), 2);
    }
     
-    else if (triggerInter) {
-    int step;
-    step = seconds / 5 - minutes % 4;
-    return months * days + step;
-  } else if (triggerWeird) {
+  // TRIGGERING INTER      
+  else if (triggerInter) 
+  {
+      Serial.println("FLOPPY: INTER");
+      int step;
+      int f = 2;
+      step = (0.5 * (minutes + seconds) / 10);
+      return f * days + step;
+  }
+    
+  // TRIGGERING WEIRD    
+  else if (triggerWeird) 
+  {
+      Serial.println("FLOPPY: WEIRD");
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
-          return 42;
+        return 42;
       } else {
-      return sqrt(years);
+        int root; 
+        root = (int) sqrt(years + seconds + minutes + hours);
+        return root;
       }
-  }  else if (triggerCadence && !blueNote) {
+  }
+    
+  else if (triggerCadence && !blueNote) {
     if (count == 0) {
       generateB();
       return 44 - 12 + b;

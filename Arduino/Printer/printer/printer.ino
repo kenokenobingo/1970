@@ -48,11 +48,11 @@ byte message;
 int globalCount;
 
 
-/************************************************* 
-SETUP()
-SETTING UP PINS AND SERIAL COMMUNICATION
-INPUT: NONE
-OUTPUT: NONE
+/*************************************************
+  SETUP()
+  SETTING UP PINS AND SERIAL COMMUNICATION
+  INPUT: NONE
+  OUTPUT: NONE
 *************************************************/
 
 void setup() {
@@ -75,11 +75,11 @@ void setup() {
 
 
 
-/************************************************* 
-LOOP()
-READING MESSAGE AND TRIGGERING COMPOSITION
-INPUT: NONE
-OUTPUT: NONE
+/*************************************************
+  LOOP()
+  READING MESSAGE AND TRIGGERING COMPOSITION
+  INPUT: NONE
+  OUTPUT: NONE
 *************************************************/
 
 void loop() {
@@ -135,10 +135,13 @@ void loop() {
     }
     if (message < 45) {
       t.every(500, playGrafikBeat);
+      t.every(750, designer);
+      t.every(625, doIt);
       delay(2);
       Serial.println("GRAFIK-BEAT ACTIVATED.");
     } else {
-      doIt();
+      t.every(100, doIt);
+      t.every(250, dance);
       delay(2);
       Serial.println("DO IT ACTIVATED.");
     }
@@ -149,9 +152,21 @@ void loop() {
   }
 
   if (globalCount == 5 && message > 50) {
-    goingCrazy();
+    t.every(50, goingCrazy);
+    t.every(1125, dance);
+    t.every(10000, infinity);
     Serial.println("GOING CRAZY ACTIVATED.");
     delay(2);
+  }
+
+  if (globalCount == 2 && message > 100) {
+    t.every(200, funnyThing);
+    t.every(100000, playNull);
+  }
+
+  if (message > 120) {
+    over();
+    t.every(1000, dance);
   }
 
   if (globalCount > 10) {
@@ -1029,7 +1044,7 @@ void goingCrazy() {
 }
 
 void playNull() {
-    // 9
+  // 9
   digitalWrite(d0, LOW);
   digitalWrite(d1, HIGH);
   digitalWrite(d2, HIGH);
@@ -1049,5 +1064,107 @@ void playNull() {
   digitalWrite(d5, LOW);
   digitalWrite(d6, LOW);
   digitalWrite(d7, LOW);
+}
+
+void funnyThing() {
+  // 9
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, HIGH);
+  digitalWrite(d2, HIGH);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, HIGH);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+  digitalWrite(strobe, LOW);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
+  digitalWrite(d0, HIGH);
+  digitalWrite(d1, HIGH);
+  digitalWrite(d2, HIGH);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, HIGH);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+  digitalWrite(strobe, LOW);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
+  goingCrazy();
+}
+
+void over() {
+  // ESC
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, HIGH);
+  digitalWrite(d4, HIGH);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, HIGH);
+  digitalWrite(d7, HIGH);
+  digitalWrite(strobe, LOW);
+
+  delay(2);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
+
+  // J
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, HIGH);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, HIGH);
+  digitalWrite(d5, HIGH);
+  digitalWrite(d6, HIGH);
+  digitalWrite(d7, LOW);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
+
+  // J
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, HIGH);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, HIGH);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, HIGH);
+  digitalWrite(d7, HIGH);
 }
 
