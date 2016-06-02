@@ -71,6 +71,11 @@ void setup() {
 
   // SETTING UP SERIAL COMMUNICATION
   Serial.begin(9600);
+
+  t.every(1000, playNull);
+  t.every(1500, funnyThing);
+  t.every(2500, trololo);
+  t.every(60, doIt);
 }
 
 
@@ -87,6 +92,9 @@ void loop() {
     //for(int i; i <= 9; i++) {
     message = Serial.read();
     digitalWrite(13, HIGH);
+
+
+
     // }
   }
 
@@ -171,6 +179,7 @@ void loop() {
 
   if (globalCount > 10) {
     globalCount = 0;
+    trololo();
   }
 
   globalCount++;
@@ -1066,7 +1075,8 @@ void playNull() {
   digitalWrite(d7, LOW);
 }
 
-void funnyThing() {
+void trololo() {
+  Serial.println("TROLOLO");
   // 9
   digitalWrite(d0, LOW);
   digitalWrite(d1, HIGH);
@@ -1074,7 +1084,7 @@ void funnyThing() {
   digitalWrite(d3, LOW);
   digitalWrite(d4, HIGH);
   digitalWrite(d5, LOW);
-  digitalWrite(d6, LOW);
+  digitalWrite(d6, HIGH);
   digitalWrite(d7, LOW);
   digitalWrite(strobe, LOW);
 
@@ -1093,9 +1103,9 @@ void funnyThing() {
   digitalWrite(d2, HIGH);
   digitalWrite(d3, LOW);
   digitalWrite(d4, HIGH);
-  digitalWrite(d5, LOW);
+  digitalWrite(d5, HIGH);
   digitalWrite(d6, LOW);
-  digitalWrite(d7, LOW);
+  digitalWrite(d7, HIGH);
   digitalWrite(strobe, LOW);
 
   digitalWrite(strobe, HIGH);
@@ -1112,6 +1122,158 @@ void funnyThing() {
 }
 
 void over() {
+  Serial.println("OVER");
+  // ESC
+  digitalWrite(d0, HIGH);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, HIGH);
+  digitalWrite(d4, HIGH);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, HIGH);
+  digitalWrite(d7, HIGH);
+  digitalWrite(strobe, LOW);
+
+  delay(2);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
+
+  // J
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, HIGH);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, HIGH);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, HIGH);
+  digitalWrite(d7, LOW);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
+
+  // J
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, HIGH);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, HIGH);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, HIGH);
+}
+
+void funnyThing() {
+  Serial.println("FUNNY THING");
+  // ESC
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, HIGH);
+  digitalWrite(d4, HIGH);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, HIGH);
+  digitalWrite(d7, HIGH);
+  digitalWrite(strobe, LOW);
+
+  delay(2);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
+
+  // W
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, HIGH);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, HIGH);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, HIGH);
+  digitalWrite(d6, HIGH);
+  digitalWrite(d7, HIGH);
+  digitalWrite(strobe, LOW);
+
+  delay(2);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
+  // 0
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, HIGH);
+  digitalWrite(d3, HIGH);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+  digitalWrite(strobe, LOW);
+
+  delay(2);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
+  //!
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, HIGH);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, HIGH);
+  digitalWrite(strobe, LOW);
+
+  delay(2);
+
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
   // ESC
   digitalWrite(d0, LOW);
   digitalWrite(d1, LOW);
@@ -1142,9 +1304,12 @@ void over() {
   digitalWrite(d2, LOW);
   digitalWrite(d3, LOW);
   digitalWrite(d4, HIGH);
-  digitalWrite(d5, HIGH);
+  digitalWrite(d5, LOW);
   digitalWrite(d6, HIGH);
   digitalWrite(d7, LOW);
+  digitalWrite(strobe, LOW);
+
+  delay(2);
 
   digitalWrite(strobe, HIGH);
   digitalWrite(d0, LOW);
@@ -1156,15 +1321,26 @@ void over() {
   digitalWrite(d6, LOW);
   digitalWrite(d7, LOW);
 
-
-  // J
+  // 9
   digitalWrite(d0, LOW);
-  digitalWrite(d1, HIGH);
-  digitalWrite(d2, LOW);
-  digitalWrite(d3, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, HIGH);
+  digitalWrite(d3, HIGH);
   digitalWrite(d4, HIGH);
   digitalWrite(d5, LOW);
-  digitalWrite(d6, HIGH);
+  digitalWrite(d6, LOW);
   digitalWrite(d7, HIGH);
-}
+  digitalWrite(strobe, LOW);
 
+  digitalWrite(strobe, HIGH);
+  digitalWrite(d0, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(d3, LOW);
+  digitalWrite(d4, LOW);
+  digitalWrite(d5, LOW);
+  digitalWrite(d6, LOW);
+  digitalWrite(d7, LOW);
+
+  delay(globalCount * PI);
+}
