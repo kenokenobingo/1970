@@ -58,16 +58,15 @@ void setup() {
 
   /* PINBELEGUNG */
   // HEBELSCHALTER
- /* pinMode(2, INPUT_PULLUP);
+  pinMode(2, INPUT_PULLUP);
   pinMode(3, INPUT_PULLUP);
   pinMode(4, INPUT_PULLUP);
 
   //  TASTER
-  pinMode(6, INPUT_PULLUP);
   pinMode(17, INPUT_PULLUP);
   pinMode(21, INPUT_PULLUP);
   pinMode(22, INPUT_PULLUP);
-  //pinMode(23, INPUT_PULLUP);
+  pinMode(23, INPUT_PULLUP);
 
   //LEDS
   pinMode(5, OUTPUT);
@@ -80,7 +79,7 @@ void setup() {
   pinMode(16, INPUT);
 
   //VU-METER
-  pinMode(23, OUTPUT);
+  pinMode(20, OUTPUT);
   //BUILT-IN LED
   pinMode(13, OUTPUT);*/
 }
@@ -102,10 +101,11 @@ void loop() {
      digitalWrite(12, LOW);
     }*/
 
-  Serial.println(now.year());
+  //Serial.println(now.year());
+  buttons();
 }
 
-/* void buttons() {
+void buttons() {
   digitalWrite(13, HIGH);
 
   if (digitalRead(4) == HIGH) {
@@ -160,4 +160,4 @@ void loop() {
   } else {
     statusFour = 1;
   }
-} */
+}
