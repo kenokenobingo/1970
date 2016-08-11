@@ -81,7 +81,7 @@ void setup() {
   //VU-METER
   pinMode(20, OUTPUT);
   //BUILT-IN LED
-  pinMode(13, OUTPUT);*/
+  pinMode(13, OUTPUT);
 }
 
 void loop() {
@@ -92,7 +92,7 @@ void loop() {
 
   Serial.println(now.second());
 
-  //analogWrite(20, map(valueThree, 0, 1023, 50, 0));
+  analogWrite(20, map(10, 0, 1023, 50, 0));
 
   /* if(digitalRead(2) == HIGH){
      digitalWrite(12, HIGH);
@@ -102,12 +102,16 @@ void loop() {
     }*/
 
   //Serial.println(now.year());
-  buttons();
+  //buttons();
+  digitalWrite(5, HIGH);
+  digitalWrite(11, HIGH);
+  digitalWrite(12, HIGH);
 }
 
 void buttons() {
   digitalWrite(13, HIGH);
 
+  // HEBELSCHALTER
   if (digitalRead(4) == HIGH) {
     modeThree = 1;
     Serial.println("MODE 5 ACTIVATED.");
@@ -133,30 +137,41 @@ void buttons() {
     Serial.println("MODE 2 ACTIVATED.");
   }
 
+  // POTIS
   valueOne = analogRead(14);
   valueTwo = analogRead(15);
   valueThree = analogRead(16);
+  Serial.println(valueOne);
+  Serial.println(valueTwo);
+  Serial.println(valueThree);
 
   if (digitalRead(17) == HIGH) {
     statusOne = 0;
+    Serial.println("17: HIGH");
   } else {
     statusOne = 1;
+    Serial.println("17: LOW");
   }
 
   if (digitalRead(21) == HIGH) {
     statusTwo = 0;
+    Serial.println("21: HIGH");
   } else {
     statusTwo = 1;
+    Serial.println("21: LOW");
   }
 
   if (digitalRead(22) == HIGH) {
     statusThree = 0;
+    Serial.println("22: HIGH");
   } else {
     statusThree = 1;
+    Serial.println("22: LOW");
   }
 
   if (digitalRead(23) == HIGH) {
     statusFour = 0;
+    Serial.println("23: HIGH");
   } else {
     statusFour = 1;
   }
