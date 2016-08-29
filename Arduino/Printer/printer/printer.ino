@@ -89,13 +89,10 @@ void setup() {
 
 void loop() {
   if (Serial.available() > 0) {
-    //for(int i; i <= 9; i++) {
     message = Serial.read();
     digitalWrite(13, HIGH);
 
-
-
-    // }
+    delay(message * 15);
   }
 
   /*n0 = message & 512;

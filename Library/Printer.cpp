@@ -2,7 +2,7 @@
 
 
 ==================================================
-                      1970      
+                      1970
 ==================================================
 
 
@@ -33,7 +33,7 @@ Printer::Printer(){
     PRINTER_SERIAL.begin(9600);
     pinMode(13, OUTPUT);
 }
- 
+
 
 /*************************************************
 << DESTRUCTOR >>
@@ -42,7 +42,7 @@ Printer::Printer(){
 Printer::~Printer(){/*nothing to destruct*/}
 
 void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int modOne, int modTwo, int modThree, int vOne, int vTwo, int vThree, int statOne, int statTwo, int statThree, int statFour) {
-    
+
     timestamp = abc;
     seconds = sec;
     minutes = min;
@@ -50,26 +50,26 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
     days = d;
     months = m;
     years = y;
-    
+
     modeOne = modOne;
     modeTwo = modTwo;
     modeThree = modThree;
-    
+
     valueOne = vOne;
     valueTwo = vTwo;
     valueThree = vThree;
-    
+
     statusOne = statOne;
     statusTwo = statTwo;
     statusThree = statThree;
     statusFour = statFour;
-    
-    //findMode();
+
+    findMode();
 
   while (device_reset == 0) {
 
     sendNull();
-      
+
     delay(50);
 
     device_reset = 1;
@@ -81,9 +81,11 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
   message = (byte) note;
   PRINTER_SERIAL.write(note);
 
+  message = message + map(valueThree, 0, 900, -60, 60);
+
   /*playTime = generateTime();
   delayTime = generateDelay();*/
- 
+
   //Serial.println("PRINTER MESSAGE" + message);
 
  /* // SEND NOTES TO PRINTER INTERFACE
@@ -97,7 +99,7 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
     PRINTER_SERIAL.write(n7);
     PRINTER_SERIAL.write(strobe);
     PRINTER_SERIAL.write(autofd); */
-   
+
   /*// PRINT NOTES
     Serial.println(n0);
     Serial.println(n1);
@@ -109,7 +111,7 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
     Serial.println(n7);
     Serial.println(strobe);
     Serial.println(autofd);*/
-    
+
   digitalWrite(13, HIGH);
 
 
@@ -145,7 +147,7 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
 }
 
 
-/************************************************* 
+/*************************************************
 GENERATEMIDI()
 GENERATING PITCH
 INPUT: NONE
@@ -162,7 +164,7 @@ if (triggerOneNote) {
   } else if (triggerChromatic) {
       return chroma;
   }
-    
+
    // TRIGGERING SINE MODE
    else if (triggerSine)
    {
@@ -174,45 +176,45 @@ if (triggerOneNote) {
        return abs((128 * sin(6 * seconds)) * (100 * sin(seconds/6)));
       }
     }
-        
-    // TRIGGERING TANGENT MODE    
-    else if (triggerTan) 
+
+    // TRIGGERING TANGENT MODE
+    else if (triggerTan)
     {
       Serial.println("TAPE: TANGENT");
       return abs(128 * tan(6 * seconds));
     }
-        
+
     // TRIGGERING EXPONENTIAL MODE
-    else if (triggerLog) 
+    else if (triggerLog)
     {
       Serial.println("TAPE: LOGARITHMIC");
-      Serial.println((log(sin(seconds)) + exp(1)) * 60);    
+      Serial.println((log(sin(seconds)) + exp(1)) * 60);
       return (log(sin(seconds)) + exp(1)) * 60;
     }
-  
+
     // TRIGGERING SQUARE-ROOT
     else if (triggerSqrt) {
         Serial.println("TAPE: SQAURE-ROOT");
         return sqrt(seconds) * 40;
     }
-   
+
    // TRIGGERING EXPONENTIAL
-   else if (triggerEFu) 
+   else if (triggerEFu)
    {
       Serial.println("TAPE: EXPONENTIAL");
       return exp(seconds%5);
    }
-    
+
    // TRIGGERING THE POWER [SIC!]
-   else if (triggerPow) 
+   else if (triggerPow)
    {
-      Serial.println("TAPE: POWER"); 
+      Serial.println("TAPE: POWER");
       int f = 2;
       return pow(abs(seconds - minutes), 2);
    }
-    
-  // TRIGGERING INTER      
-  else if (triggerInter) 
+
+  // TRIGGERING INTER
+  else if (triggerInter)
   {
       Serial.println("FLOPPY: INTER");
       int step;
@@ -220,20 +222,20 @@ if (triggerOneNote) {
       step = (0.5 * (minutes + seconds) / 10);
       return f * days + step;
   }
-    
-  // TRIGGERING WEIRD    
-  else if (triggerWeird) 
+
+  // TRIGGERING WEIRD
+  else if (triggerWeird)
   {
       Serial.println("FLOPPY: WEIRD");
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
         return 42;
       } else {
-        int root; 
+        int root;
         root = (int) sqrt(years + seconds + minutes + hours);
         return root;
       }
   }
-    
+
   else if (triggerCadence && !blueNote) {
     if (count == 0) {
       generateB();
@@ -252,7 +254,7 @@ if (triggerOneNote) {
   } else if (triggerCadence && blueNote) {
     if (improvisation) {
       int i;
-        
+
       int Jazzy[] = {44, 47, 48, 49, 50, 51, 54, 55, 56};
 
         i = (timestamp >> 28) + random (0,2);
@@ -279,30 +281,30 @@ if (triggerOneNote) {
       return 60 - 12 + b;
     }
   }
-   return 44; 
+   return 44;
 }
 
 /* // GENERATE DURATION OF A NOTE
 float Printer::generateTime() {
   float x;
-    
+
   if (triggerWeird) {
       return seconds;
-  } 
-    
+  }
+
   if (triggerInter) {
       int interVal = days/months;
       return interVal;
   }
-    
+
   if (triggerChromatic) {
       return 20;
   }
-    
+
   if (yearIsTime) {
       return years;
   }
-    
+
   if (triggerCadence) {
       return years / months;
   }
@@ -330,7 +332,7 @@ float Printer::generateTime() {
       float Time[] = {50, 75, 100, 125, 150, 175, 200, 250, 300, 400, 500};
         int i = timestamp >> 28;
         return Time[i];
-     } else {   
+     } else {
         return months * seconds;
   }
 }
@@ -347,7 +349,7 @@ float Printer::generateTime() {
   } else {
     x = 1;
   }
-    
+
   if (triggerWeird) {
       return 0;
   }
@@ -355,16 +357,16 @@ float Printer::generateTime() {
   if (triggerChaosMode) {
    // return (minutes * seconds) + a;
       bool oneOrAnother;
-      
+
       int a = random(0,2);
-      
+
       if (a < 1) {
           oneOrAnother = true;
       } else {
           oneOrAnother = false;
       }
-      
-      
+
+
       if (oneOrAnother) {
           return (minutes * seconds) + a;
       } else {
@@ -378,7 +380,7 @@ float Printer::generateTime() {
   } else {
     return ((timestamp >> 21) * x) + a;
   }
-  
+
     if (triggerCadence) {
       return 50;
     }
@@ -387,16 +389,16 @@ float Printer::generateTime() {
 // GENERATE TIME BETWEEN NOTES
 float Printer::generateDelay() {
   float x;
-    
+
   if (triggerWeird) {
       return 0;
   }
-    
+
   if (triggerInter) {
       int interValDel = months/years;
       return interValDel;
   }
-    
+
   if (triggerChromatic) {
       return 5;
   }
@@ -406,7 +408,7 @@ float Printer::generateDelay() {
     bool longOrShort = true;
     int i;
     float Time[] = {5, 10, 20, 50, 15, 20, 25, 50, 100, 400, 500};
-      
+
     if (longOrShort) {
       i = timestamp >> 27;
     } else {
@@ -487,7 +489,7 @@ void Printer::sendNull() {
     n7 = 0;
     strobe = 1;
     autofd = 1;
-    
+
     PRINTER_SERIAL.write(n0);
     PRINTER_SERIAL.write(n1);
     PRINTER_SERIAL.write(n2);
@@ -498,7 +500,7 @@ void Printer::sendNull() {
     PRINTER_SERIAL.write(n7);
     PRINTER_SERIAL.write(strobe);
     PRINTER_SERIAL.write(autofd);*/
-    
+
     int nix = 0;
     PRINTER_SERIAL.write(nix);
 }
@@ -543,104 +545,90 @@ void Printer::generateB() {
   }
 }*/
 
-/*
+
+// READ INPUTS
+// CHOOSING MODE
 void Printer::findMode() {
-    Serial.println("PRINTER ENTERED FINDMODE FUNKTION." );
-    
+    // LEVER SWITCH #1
     if(modeOne == 1) {
       triggerCadence = true;
       triggerChaosMode = false;
       digitalWrite(11, HIGH);
-      Serial.println("PRINTER CADENCE ACTIVATED.");
+      Serial.println("CADENCE ACTIVATED.");
   } else if (modeOne == 2) {
       triggerChaosMode = true;
       triggerCadence = false;
-      Serial.println("PRINTER CHAOS ACTIVATED.");
+      Serial.println("CHAOS ACTIVATED.");
   }
-    
-  if (modeTwo == 1) {
-      triggerOneNote = true;
-      Serial.println("PRINTER ONE NOTE ACTIVATED.");
-  } else if (modeTwo == 2) {
-      triggerOneNote = false;
-      Serial.println("PRINTER ONE NOTE DEACTIVATED.");
-  }
-    
-  if (modeThree == 1) {
-      triggerWeird = true;
-      Serial.println("PRINTER WEIRD ACTIVATED.");
-  } else if (modeThree == 2) {
-      triggerWeird = false;
-      Serial.println("PRINTER WEIRD DEACTIVATED.");
-  }
-    
-    
 
-if (!turnOne) {    
+  // LEVER SWITCH #2
+  if (modeTwo == 1) {
+      backwards = false;
+      Serial.println("BACKWARDS ACTIVATED.");
+  } else if (modeTwo == 2) {
+      backwards = true;
+      Serial.println("BACKWARDS DEACTIVATED.");
+  }
+
+  // LEVER SWITCH #3
+  if (modeThree == 1) {
+      triggerJazzy = true;
+      blueNote = true;
+      Serial.println("JAZZY ACTIVATED.");
+  } else if (modeThree == 2) {
+      triggerJazzy = false;
+      blueNote = false;
+      Serial.println("JAZZY DEACTIVATED.");
+  }
+
+
+// PUSH-BUTTON #1
     if (statusOne == 1) {
         improvisation = true;
-        Serial.println("PRINTER IMPROVISATION ACTIVATED.");
+        digitalWrite(5, HIGH);
+        Serial.println("IMPROVISATION ACTIVATED.");
     }
-    
-    turnOne = true;
-} else {
-    if (statusOne == 1) {
+    else if (statusOne == 0) {
         improvisation = false;
-        Serial.println("PRINTER IMPROVISATION DEACTIVATED.");
+        digitalWrite(5, LOW);
+        Serial.println("IMPROVISATION DEACTIVATED.");
     }
-    
-    turnOne = false;
-}
-    
-    
-if (!turnTwo) {    
-    if (statusTwo == 1) {
-        triggerOneNote = true;
-        Serial.println("PRINTER ONE NOTE ACTIVATED.");
-    }
-    
-    turnTwo = true;
-} else {
-    if (statusTwo == 1) {
-        triggerOneNote = false;
-        Serial.println("PRINTER ONE NOTE DEACTIVATED.");
-    }
-    
-    turnTwo = false;
-}
-    
 
-if (!turnThree) {    
-    if (statusThree == 1) {
-        triggerChromatic = true;
-        Serial.println("PRINTER CHROMATIC ACTIVATED.");
-    }
-    
-    turnThree = true;
-} else {
-    if (statusThree == 1) {
-        triggerChromatic = false;
-        Serial.println("PRINTER CHROMATIC DEACTIVATED.");
-    }
-    
-    turnThree = false;
+// PUSH-BUTTON #2
+  if (statusTwo == 1) {
+        triggerOneNote = true;
+        digitalWrite(11, HIGH);
+        Serial.println("ONE NOTE ACTIVATED.");
+  }
+  else if (statusTwo == 0) {
+        triggerOneNote = false;
+        digitalWrite(11, LOW);
+        Serial.println("ONE NOTE DEACTIVATED.");
+  }
+
+// PUSH-BUTTON #3
+  if (statusThree == 1) {
+      triggerChromatic = true;
+      digitalWrite(12, HIGH);
+      Serial.println("CHROMATIC ACTIVATED.");
+  }
+  else if (statusThree == 0) {
+      triggerChromatic = false;
+      digitalWrite(12, LOW);
+      Serial.println("CHROMATIC DEACTIVATED.");
+  }
+
+// PUSH-BUTTON #4
+  if (statusFour == 1) {
+      minor = true;
+      digitalWrite(5, HIGH);
+      digitalWrite(12, HIGH);
+      Serial.println("MINOR ACTIVATED.");
+  }
+  else if (statusFour == 1) {
+      minor = false;
+      digitalWrite(5, LOW);
+      digitalWrite(12, LOW);
+      Serial.println("MINOR DEACTIVATED.");
+  }
 }
-    
-if (!turnFour) {    
-    if (statusFour == 1) {
-        minor = true;
-        Serial.println("PRINTER MINOR ACTIVATED.");
-    }
-    
-    turnFour = true;
-} else {
-    if (statusFour == 1) {
-        minor = false;
-        Serial.println("PRINTER MINOR DEACTIVATED.");
-    }
-    
-    turnFour = false;
-}
-    
- message = generateMIDI();
-} */

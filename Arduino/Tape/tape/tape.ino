@@ -31,18 +31,23 @@ void setup() {
 
   digitalWrite(motor1_A, LOW);
   digitalWrite(motor1_B, HIGH);
+
+  delay(20);
 }
 
 void loop() {
-  if (Serial.available() > 0) {
+  /*if (Serial.available() > 0) {
     message = Serial.read();
     digitalWrite(13, HIGH);
-  }
+  }*/
 
-  PWM_out_level = map(message, 0, 128, 0, 256);
+  PWM_out_level = 120;
+
+  //PWM_out_level = map(message, 0, 128, 0, 128);
+  //PWM_out_level = message;
   Serial.println(message);
 
   analogWrite(PWM_out_pin, PWM_out_level);
+  //delay(500);
   Serial.println(PWM_out_level);
 }
-

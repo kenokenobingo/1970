@@ -2,7 +2,7 @@
 
 
 ==================================================
-                      1970      
+                      1970
 ==================================================
 
 
@@ -40,7 +40,7 @@ Floppy::Floppy(){
     FLOPPY_SERIAL.begin(9600);
     pinMode(13, OUTPUT);
 }
- 
+
 
 /*************************************************
 << DESTRUCTOR >>
@@ -50,8 +50,8 @@ Floppy::~Floppy(){ /* NOTHING TO DESTRUCT */ }
 
 
 void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int modOne, int modTwo, int modThree, int vOne, int vTwo, int vThree, int statOne, int statTwo, int statThree, int statFour) {
-    
-    
+
+
     timestamp = abc;
     seconds = sec;
     minutes = min;
@@ -59,22 +59,22 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
     days = d;
     months = m;
     years = y;
-    
+
     modeOne = modOne;
     modeTwo = modTwo;
     modeThree = modThree;
-    
+
     valueOne = vOne;
     valueTwo = vTwo;
     valueThree = vThree;
-    
+
     statusOne = statOne;
     statusTwo = statTwo;
     statusThree = statThree;
     statusFour = statFour;
 
-    //findMode();
-    
+    findMode();
+
   while (device_reset == 0) {
     FLOPPY_SERIAL.write(reset);
 
@@ -89,7 +89,7 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
 
     _delay_ms(500);
   }
-    
+
   message = generateMIDI();
 
   playTime = generateTime();
@@ -98,7 +98,7 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
   // PRINT MESSAGE IN THE CONSOLE
   Serial.println(message);
 
-  message = message + map(valueThree, 0, 1023, -10, 10);    
+  message = message + map(valueThree, 0, 1023, -10, 10);
   note = microPeriods[message];
   period = note / magicNumber;
   //int period = (int) (currentPeriod[message.getStatus() - 224] / Math.pow(2.0, (BEND_CENTS/1200.0)*((pitchBend - 8192.0) / 8192.0)));
@@ -111,12 +111,12 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
   FLOPPY_SERIAL.write(pin);
   FLOPPY_SERIAL.write(partOne);
   FLOPPY_SERIAL.write(partTwo);
-    
+
   // PRINT THE MESSAGE IN THE CONSOLE
   Serial.println(pin);
   Serial.println(partOne);
   Serial.println(partTwo);
-    
+
   // INTERNAL LED ON
   digitalWrite(13, HIGH);
 
@@ -147,25 +147,25 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
 
   doTimeshift();
 
-  // RE-CALCULATE TIME    
-  playTime = playTime + map(valueOne, 0, 1023, -100, 100);
+  // RE-CALCULATE TIME
+  playTime = playTime + map(valueOne, 0, 100, -100, 100);
   delayTime = delayTime + map(valueTwo, 0, 1023, -100, 100);
-     
+
   // SUSATAIN NOTE
   delay(playTime);
 
-  // SILENCE THE DRIVE    
+  // SILENCE THE DRIVE
   sendNull();
-    
+
   // SUSTAIN SILENCE
   delay(delayTime);
-    
-  // INTERNAL LED OFF    
+
+  // INTERNAL LED OFF
   digitalWrite(13, LOW);
 }
 
 
-/************************************************* 
+/*************************************************
 GENERATEMIDI()
 GENERATING PITCH
 INPUT: NONE
@@ -173,23 +173,23 @@ OUTPUT: RETURNS MIDI VALUE, INTEGER
 *************************************************/
 
 int Floppy::generateMIDI() {
-    
+
   // TRIGGERING CHAOS MODE
-  if (triggerChaosMode) 
+  if (triggerChaosMode)
   {
      Serial.println("FLOPPY: CHAOS");
      return chaosMode();
   }
-    
-  // TRIGGERING CHROMATIC    
-  else if (triggerChromatic) 
+
+  // TRIGGERING CHROMATIC
+  else if (triggerChromatic)
   {
       Serial.println("FLOPPY: CHROMATIC");
       return chroma;
   }
-      
-  // TRIGGERING INTER      
-  else if (triggerInter) 
+
+  // TRIGGERING INTER
+  else if (triggerInter)
   {
       Serial.println("FLOPPY: INTER");
       int step;
@@ -197,22 +197,22 @@ int Floppy::generateMIDI() {
       step = (0.5 * (minutes + seconds) / 10);
       return f * days + step;
   }
-      
-  // TRIGGERING WEIRD    
-  else if (triggerWeird) 
+
+  // TRIGGERING WEIRD
+  else if (triggerWeird)
   {
       Serial.println("FLOPPY: WEIRD");
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
         return 42;
       } else {
-        int root; 
+        int root;
         root = (int) sqrt(years + seconds + minutes + hours);
         return root;
       }
   }
-      
-  // TRIGGERING SINE    
-  else if (triggerSine) 
+
+  // TRIGGERING SINE
+  else if (triggerSine)
   {
       Serial.println("FLOPPY: SINE");
       if(!triggerModulation) {
@@ -221,9 +221,9 @@ int Floppy::generateMIDI() {
          return abs(((40 * sin(6 * seconds)) + 30) * (25 * sin(seconds/6)));
       }
   }
-      
-  // TRIGGERING TANGENT   
-  else if (triggerTan) 
+
+  // TRIGGERING TANGENT
+  else if (triggerTan)
   {
       Serial.println("FLOPPY: TANGENT");
       if(!triggerModulation) {
@@ -232,43 +232,43 @@ int Floppy::generateMIDI() {
          return abs(((40 * tan(6 * seconds)) + 30) * (25 * tan(seconds/6)));
       }
   }
-      
-  // TRIGGERING EXPONENTIAL     
+
+  // TRIGGERING EXPONENTIAL
   else if (triggerEFu)
   {
       Serial.println("FLOPPY: EXPONENTIAL");
       return exp(seconds%5);
   }
-      
-  // TRIGGERING LOGARITHMIC      
+
+  // TRIGGERING LOGARITHMIC
   else if (triggerLog)
   {
       Serial.println("FLOPPY: LOGARITHMIC");
-      Serial.println((log(sin(seconds)) + exp(1)) * 60);    
+      Serial.println((log(sin(seconds)) + exp(1)) * 60);
       return (log(sin(seconds)) + exp(1)) * 20;
   }
-  
-  // TRIGGERING SQUARE-ROOT      
+
+  // TRIGGERING SQUARE-ROOT
   else if (triggerSqrt)
   {
         Serial.println("FLOPPY: SQUARE-ROOT");
         return sqrt(seconds) * 40;
   }
-    
+
   // TRIGGERING THE POWER [SIC!]
   else if (triggerPow) {
       Serial.println("FLOPPY: POWER");
       return pow(abs(seconds - minutes), 2);
   }
-  
+
   // TRIGGERIN ONE NOTE
-  else if (triggerOneNote) 
+  else if (triggerOneNote)
   {
     Serial.println("FLOPPY: CADENCE");
     //return (int) timestamp >> 24;
     return 44;
   }
-  
+
   // TRIGGERING CADENCE
   else if (triggerCadence && !blueNote) {
     if (count == 0) {
@@ -286,13 +286,13 @@ int Floppy::generateMIDI() {
       return 44 - 12 + b;
     }
   }
-    
+
   // TRIGGERING JAZZY
   else if (triggerCadence && blueNote) {
-    Serial.println("FLOPPY: JAZZY");  
+    Serial.println("FLOPPY: JAZZY");
     if (improvisation) {
       int i;
-        
+
       int Jazzy[] = {44, 47, 48, 49, 50, 51, 54, 55, 56};
 
         i = (timestamp >> 28) + random (0,2);
@@ -319,7 +319,7 @@ int Floppy::generateMIDI() {
       return 60 - 12 + b;
     }
   }
-    
+
   // TRIGGERING MELODY
   else if (triggerMelody) {
      Serial.println("FLOPPY: MELODY");
@@ -337,20 +337,20 @@ int Floppy::generateMIDI() {
         melodyCount++;
         return 49;
       } else {
-        Serial.println("M: RESET"); 
+        Serial.println("M: RESET");
         melodyCount = 1;
         return 44;
       }
-      
+
       return 0;
   }
-    
+
    // FALLBACK
-   return 44; 
+   return 44;
 }
 
 
-/************************************************* 
+/*************************************************
 GENERATETIME()
 GENERATING DURATION OF A NOTE
 INPUT: NONE
@@ -359,58 +359,58 @@ OUTPUT: RETURNS DURATION OF A NOTE, FLOAT
 
 float Floppy::generateTime() {
   float x;
-    
+
   if (triggerWeird) {
       return seconds;
-  } 
-    
+  }
+
   if (triggerInter) {
       int interVal = days/months;
       return interVal;
   }
-    
+
   if (triggerChromatic) {
       return 20;
   }
-    
+
   if (triggerLog) {
       return log(seconds);
   }
-    
+
   if (yearIsTime) {
       return years;
   }
-    
+
   if (triggerSine) {
       return abs(365 * sin(years));
   }
-    
+
   // TRIGGERING THE POWER [SIC!]
   if (triggerPow) {
       int f = 2;
       return pow(abs(seconds - minutes), f);
   }
-    
+
   if (triggerTan) {
       return abs(365 * tan(years));
   }
-    
+
   if (triggerLog) {
       return 365 * log(years);
   }
-    
+
   if (triggerSqrt) {
       return sqrt(years) + 365;
   }
-    
+
   if (triggerEFu) {
       return exp(years % 2) + years;
-  }    
-    
+  }
+
   if (triggerCadence) {
       return years / months;
   }
-    
+
   if (triggerMelody) {
       int f = 50;
       return hours * f;
@@ -440,7 +440,7 @@ float Floppy::generateTime() {
       float Time[] = {50, 75, 100, 125, 150, 175, 200, 250, 300, 400, 500};
         int i = timestamp >> 28;
         return Time[i];
-     } else { 
+     } else {
         Serial.println("FLOPPY: PICKTIME MONTHS");
         return months * seconds;
   }
@@ -458,7 +458,7 @@ float Floppy::generateTime() {
   } else {
     x = 1;
   }
-    
+
   if (triggerWeird) {
       return 0;
   }
@@ -466,16 +466,16 @@ float Floppy::generateTime() {
   if (triggerChaosMode) {
    // return (minutes * seconds) + a;
       bool oneOrAnother;
-      
+
       int a = random(0,2);
-      
+
       if (a < 1) {
           oneOrAnother = true;
       } else {
           oneOrAnother = false;
       }
-      
-      
+
+
       if (oneOrAnother) {
           return (minutes * seconds) + a;
       } else {
@@ -489,7 +489,7 @@ float Floppy::generateTime() {
   } else {
     return ((timestamp >> 21) * x) + a;
   }
-  
+
     if (triggerCadence) {
       return 50;
     }
@@ -498,25 +498,25 @@ float Floppy::generateTime() {
 // GENERATE TIME BETWEEN NOTES
 float Floppy::generateDelay() {
   float x;
-    
+
   if (triggerMelody) {
       int f = 10;
       return hours * f;
   }
-    
+
   if (triggerSine) {
       return 0;
   }
-    
+
   if (triggerWeird) {
       return 100;
   }
-    
+
   if (triggerInter) {
       int interValDel = months/years;
       return interValDel;
   }
-    
+
   if (triggerChromatic) {
       return 5;
   }
@@ -526,7 +526,7 @@ float Floppy::generateDelay() {
     bool longOrShort = true;
     int i;
     float Time[] = {5, 10, 20, 50, 15, 20, 25, 50, 100, 400, 500};
-      
+
     if (longOrShort) {
       i = timestamp >> 27;
     } else {
@@ -611,7 +611,7 @@ int Floppy::chaosMode() {
   int sh = seconds + hours;
 
   val = random(mm, sh);
-    
+
   return val;
 }
 
@@ -685,7 +685,7 @@ void Floppy::doTimeshift () {
   }
 }
 
-/*// READ INPUTS
+// READ INPUTS
 // CHOOSING MODE
 void Floppy::findMode() {
     // LEVER SWITCH #1
@@ -699,8 +699,8 @@ void Floppy::findMode() {
       triggerCadence = false;
       Serial.println("CHAOS ACTIVATED.");
   }
-    
-  // LEVER SWITCH #2    
+
+  // LEVER SWITCH #2
   if (modeTwo == 1) {
       backwards = false;
       Serial.println("BACKWARDS ACTIVATED.");
@@ -708,7 +708,7 @@ void Floppy::findMode() {
       backwards = true;
       Serial.println("BACKWARDS DEACTIVATED.");
   }
-    
+
   // LEVER SWITCH #3
   if (modeThree == 1) {
       triggerJazzy = true;
@@ -719,86 +719,55 @@ void Floppy::findMode() {
       blueNote = false;
       Serial.println("JAZZY DEACTIVATED.");
   }
-    
-    
+
+
 // PUSH-BUTTON #1
-if (!turnOne) {    
     if (statusOne == 1) {
         improvisation = true;
         digitalWrite(5, HIGH);
         Serial.println("IMPROVISATION ACTIVATED.");
     }
-    
-    turnOne = true;
-} else {
-    if (statusOne == 1) {
+    else if (statusOne == 0) {
         improvisation = false;
         digitalWrite(5, LOW);
         Serial.println("IMPROVISATION DEACTIVATED.");
     }
-    
-    turnOne = false;
-}
-    
+
 // PUSH-BUTTON #2
-if (!turnTwo) {    
-    if (statusTwo == 1) {
+  if (statusTwo == 1) {
         triggerOneNote = true;
         digitalWrite(11, HIGH);
         Serial.println("ONE NOTE ACTIVATED.");
-    }
-    
-    turnTwo = true;
-} else {
-    if (statusTwo == 1) {
+  }
+  else if (statusTwo == 0) {
         triggerOneNote = false;
         digitalWrite(11, LOW);
         Serial.println("ONE NOTE DEACTIVATED.");
-    }
-    
-    turnTwo = false;
-}
-    
+  }
+
 // PUSH-BUTTON #3
-if (!turnThree) {    
-    if (statusThree == 1) {
-        triggerChromatic = true;
-        digitalWrite(12, HIGH);
-        Serial.println("CHROMATIC ACTIVATED.");
-    }
-    
-    turnThree = true;
-} else {
-    if (statusThree == 1) {
-        triggerChromatic = false;
-        digitalWrite(12, LOW);
-        Serial.println("CHROMATIC DEACTIVATED.");
-    }
-    
-    turnThree = false;
+  if (statusThree == 1) {
+      triggerChromatic = true;
+      digitalWrite(12, HIGH);
+      Serial.println("CHROMATIC ACTIVATED.");
+  }
+  else if (statusThree == 0) {
+      triggerChromatic = false;
+      digitalWrite(12, LOW);
+      Serial.println("CHROMATIC DEACTIVATED.");
+  }
+
+// PUSH-BUTTON #4
+  if (statusFour == 1) {
+      minor = true;
+      digitalWrite(5, HIGH);
+      digitalWrite(12, HIGH);
+      Serial.println("MINOR ACTIVATED.");
+  }
+  else if (statusFour == 1) {
+      minor = false;
+      digitalWrite(5, LOW);
+      digitalWrite(12, LOW);
+      Serial.println("MINOR DEACTIVATED.");
+  }
 }
-    
-// PUSH-BUTTON #4    
-if (!turnFour) {    
-    if (statusFour == 1) {
-        minor = true;
-        digitalWrite(5, HIGH);
-        digitalWrite(12, HIGH);
-        Serial.println("MINOR ACTIVATED.");
-    }
-    
-    turnFour = true;
-} else {
-    if (statusFour == 1) {
-        minor = false;
-        digitalWrite(5, LOW);
-        digitalWrite(12, LOW);
-        Serial.println("MINOR DEACTIVATED.");
-    }
-    
-    turnFour = false;
-}
- 
-// GENERATE MESSAGE
- message = generateMIDI();
-} */

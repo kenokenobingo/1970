@@ -2,7 +2,7 @@
 
 
 ==================================================
-                      1970      
+                      1970
 ==================================================
 
 
@@ -36,7 +36,7 @@ class Floppy {
     void generateB();
     void doTimeshift();
     void findMode();
-    
+
     int timestamp;
     int seconds;
     int minutes;
@@ -44,29 +44,29 @@ class Floppy {
     int days;
     int months;
     int years;
-    
+
     int modeOne;
     int modeTwo;
     int modeThree;
-    
+
     int valueOne;
     int valueTwo;
     int valueThree;
-    
+
     int statusOne;
     int statusTwo;
     int statusThree;
     int statusFour;
-    
+
     bool turnOne;
     bool turnTwo;
     bool turnThree;
     bool turnFour;
     bool turnFive;
-    
-    
+
+
     int melodyCount = 1;
-    
+
     int message = 25;
     float playTime;
     float delayTime;
@@ -123,7 +123,7 @@ class Floppy {
     bool improvisation;
     bool minor;
     bool yearIsTime;
-    
+
     // VARIABLEN, DIE DURCH DAS INTERFACE GESTEUERT WERDEN
     /* float speed = ; // Abspielgeschwindigkeit
     float chaosFactor = ; // Chaosanteil der Komposition

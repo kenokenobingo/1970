@@ -2,7 +2,7 @@
 
 
 ==================================================
-                      1970      
+                      1970
 ==================================================
 
 
@@ -37,7 +37,7 @@ class Tape {
     void doTimeshift();
     void findMode();
     void dodo();
-    
+
     // TIME VARIABLES
     int timestamp;
     int seconds;
@@ -46,33 +46,33 @@ class Tape {
     int days;
     int months;
     int years;
-    
+
     // VALUES LEVER SWITCHES
     int modeOne;
     int modeTwo;
     int modeThree;
-    
+
     // VALUES POTS
     int valueOne;
     int valueTwo;
     int valueThree;
-    
+
     // VALUES PUSH-BUTTONS
     int statusOne;
     int statusTwo;
     int statusThree;
     int statusFour;
-    
+
     // STATUS PUSH-BUTTONS
     bool turnOne;
     bool turnTwo;
     bool turnThree;
     bool turnFour;
     bool turnFive;
-    
-    
+
+
     int melodyCount = 1;
-    
+
     // COMPOSITION VALUES
     int message = 25;
     float playTime;
@@ -137,13 +137,13 @@ class Tape {
     bool improvisation;
     bool minor;
     bool yearIsTime;
-    
-    // VARIABLEN, DIE DURCH DAS INTERFACE GESTEUERT WERDEN
-    /* float speed = ; // Abspielgeschwindigkeit
-    float chaosFactor = ; // Chaosanteil der Komposition
-    float b = ; // b (siehe bTriggered)
-    float jump = ; // Sprünhr im Takt
-    */
+
+  /*  // VARIABLEN, DIE DURCH DAS INTERFACE GESTEUERT WERDEN
+    float speed; // Abspielgeschwindigkeit
+    float chaosFactor; // Chaosanteil der Komposition
+    float b; // b (siehe bTriggered)
+    float jump; // Sprünge im Takt */
+
 };
 
 #endif
