@@ -447,7 +447,6 @@ void Tape::findMode() {
     // LEVER SWITCH #1
     if(modeOne == 1) {
       triggerHickHack = true;
-      digitalWrite(11, HIGH);
       Serial.println("HICKHACK ACTIVATED.");
   } else if (modeOne == 2) {
       triggerHickHack = false;
@@ -476,13 +475,11 @@ void Tape::findMode() {
     if (statusOne == 1)
     {
         improvisation = true;
-        digitalWrite(5, HIGH);
         Serial.println("IMPROVISATION ACTIVATED.");
     }
     else if (statusOne == 0)
     {
         improvisation = false;
-        digitalWrite(5, LOW);
         Serial.println("IMPROVISATION DEACTIVATED.");
     }
 
@@ -490,13 +487,11 @@ void Tape::findMode() {
   if (statusTwo == 1)
   {
         triggerOneNote = true;
-        digitalWrite(11, HIGH);
         Serial.println("ONE NOTE ACTIVATED.");
   }
   else if (statusTwo == 0)
   {
         triggerOneNote = false;
-        digitalWrite(11, LOW);
         Serial.println("ONE NOTE DEACTIVATED.");
   }
 
@@ -506,13 +501,11 @@ void Tape::findMode() {
       triggerChromatic = true;
       triggerHickHack = false;
       triggerSine = false;
-      digitalWrite(12, HIGH);
       Serial.println("CHROMATIC ACTIVATED.");
   }
   else if (statusThree == 0)
   {
       triggerChromatic = false;
-      digitalWrite(12, LOW);
       Serial.println("CHROMATIC DEACTIVATED.");
   }
 
@@ -520,15 +513,11 @@ void Tape::findMode() {
   if (statusFour == 1)
   {
       minor = true;
-      digitalWrite(5, HIGH);
-      digitalWrite(12, HIGH);
       Serial.println("MINOR ACTIVATED.");
   }
   else if (statusFour == 1)
   {
       minor = false;
-      digitalWrite(5, LOW);
-      digitalWrite(12, LOW);
       Serial.println("MINOR DEACTIVATED.");
   }
 }

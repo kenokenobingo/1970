@@ -553,7 +553,6 @@ void Printer::findMode() {
     if(modeOne == 1) {
       triggerCadence = true;
       triggerChaosMode = false;
-      digitalWrite(11, HIGH);
       Serial.println("CADENCE ACTIVATED.");
   } else if (modeOne == 2) {
       triggerChaosMode = true;
@@ -585,50 +584,40 @@ void Printer::findMode() {
 // PUSH-BUTTON #1
     if (statusOne == 1) {
         improvisation = true;
-        digitalWrite(5, HIGH);
         Serial.println("IMPROVISATION ACTIVATED.");
     }
     else if (statusOne == 0) {
         improvisation = false;
-        digitalWrite(5, LOW);
         Serial.println("IMPROVISATION DEACTIVATED.");
     }
 
 // PUSH-BUTTON #2
   if (statusTwo == 1) {
         triggerOneNote = true;
-        digitalWrite(11, HIGH);
         Serial.println("ONE NOTE ACTIVATED.");
   }
   else if (statusTwo == 0) {
         triggerOneNote = false;
-        digitalWrite(11, LOW);
         Serial.println("ONE NOTE DEACTIVATED.");
   }
 
 // PUSH-BUTTON #3
   if (statusThree == 1) {
       triggerChromatic = true;
-      digitalWrite(12, HIGH);
       Serial.println("CHROMATIC ACTIVATED.");
   }
   else if (statusThree == 0) {
       triggerChromatic = false;
-      digitalWrite(12, LOW);
       Serial.println("CHROMATIC DEACTIVATED.");
   }
 
 // PUSH-BUTTON #4
   if (statusFour == 1) {
       minor = true;
-      digitalWrite(5, HIGH);
-      digitalWrite(12, HIGH);
       Serial.println("MINOR ACTIVATED.");
   }
-  else if (statusFour == 1) {
+  else if (statusFour == 0) {
       minor = false;
-      digitalWrite(5, LOW);
-      digitalWrite(12, LOW);
       Serial.println("MINOR DEACTIVATED.");
   }
 }

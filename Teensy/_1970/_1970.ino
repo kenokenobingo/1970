@@ -168,7 +168,7 @@ void loop() {
   tape.main(now.unixtime(), now.second(), now.minute(), now.hour(), now.day(), now.month(), now.year(), modeOne, modeTwo, modeThree, valueOne, valueTwo, valueThree, statusOne, statusTwo, statusThree, statusFour);
   Serial.println(now.second());
 
-  analogWrite(20, map(2, 0, 1023, 50, 0));
+  analogWrite(vuPin, map(sin(0.2*now.second()), -1, 1, 0, 25));
 
   output();
 
@@ -237,10 +237,12 @@ void triggerSwitchOne()
     if (statusOne == 1)
     {
       statusOne = 0;
+      digitalWrite(5, LOW);
     }
     else
     {
       statusOne = 1;
+      digitalWrite(5, HIGH);
     }
   }
   else {}
@@ -255,10 +257,12 @@ void triggerSwitchTwo()
   if (statusTwo == 1)
   {
     statusTwo = 0;
+    digitalWrite(11, LOW);
   }
   else
   {
     statusTwo = 1;
+    digitalWrite(11, HIGH);
   }
 }
 
@@ -268,10 +272,12 @@ void triggerSwitchThree()
   if (statusThree == 1)
   {
     statusThree = 0;
+    digitalWrite(12, LOW);
   }
   else
   {
     statusThree = 1;
+    digitalWrite(12, HIGH);
   }
 }
 
@@ -282,10 +288,14 @@ void triggerSwitchFour()
   if (statusFour == 1)
   {
     statusFour = 0;
+    digitalWrite(5, LOW);
+    digitalWrite(12, LOW);
   }
   else
   {
     statusFour = 1;
+    digitalWrite(5, HIGH);
+    digitalWrite(12, HIGH);
   }
 }
 
