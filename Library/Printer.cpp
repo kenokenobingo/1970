@@ -216,7 +216,7 @@ int Printer::generateMIDI()
         return root;
       }
   }
-
+  // NO BLUE NOTE
   else if (triggerCadence && !blueNote) {
     if (count == 0) {
       generateB();
@@ -232,7 +232,10 @@ int Printer::generateMIDI()
     } else if (count == 3) {
       return 44 - 12 + b;
     }
-  } else if (triggerCadence && blueNote) {
+  }
+
+  // BLUE NOTE
+  else if (triggerCadence && blueNote) {
     if (improvisation) {
       int i;
 
@@ -271,6 +274,7 @@ GENERATING PITCH WITH CHAOS
 INPUT: NONE
 OUTPUT: RETURNS MIDI VALUE, INTEGER
 *************************************************/
+
 int Printer::chaosMode() {
   return random(0, 144);
 }
