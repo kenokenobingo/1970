@@ -264,7 +264,7 @@ int Floppy::generateMIDI() {
   // TRIGGERIN ONE NOTE
   else if (triggerOneNote)
   {
-    Serial.println("FLOPPY: CADENCE");
+    Serial.println("FLOPPY: ONE NOTE");
     //return (int) timestamp >> 24;
     return 44;
   }

@@ -83,35 +83,6 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
 
   message = message + map(valueThree, 0, 900, -60, 60);
 
-  /*playTime = generateTime();
-  delayTime = generateDelay();*/
-
-  //Serial.println("PRINTER MESSAGE" + message);
-
- /* // SEND NOTES TO PRINTER INTERFACE
-    PRINTER_SERIAL.write(n0);
-    PRINTER_SERIAL.write(n1);
-    PRINTER_SERIAL.write(n2);
-    PRINTER_SERIAL.write(n3);
-    PRINTER_SERIAL.write(n4);
-    PRINTER_SERIAL.write(n5);
-    PRINTER_SERIAL.write(n6);
-    PRINTER_SERIAL.write(n7);
-    PRINTER_SERIAL.write(strobe);
-    PRINTER_SERIAL.write(autofd); */
-
-  /*// PRINT NOTES
-    Serial.println(n0);
-    Serial.println(n1);
-    Serial.println(n2);
-    Serial.println(n3);
-    Serial.println(n4);
-    Serial.println(n5);
-    Serial.println(n6);
-    Serial.println(n7);
-    Serial.println(strobe);
-    Serial.println(autofd);*/
-
   digitalWrite(13, HIGH);
 
 
@@ -154,21 +125,31 @@ INPUT: NONE
 OUTPUT: RETURNS MIDI VALUE, INTEGER
 *************************************************/
 
-int Printer::generateMIDI() {
-  //return (int) timestamp >> 24;
-if (triggerOneNote) {
-    //return (int) timestamp >> 24;
+int Printer::generateMIDI()
+{
+  // TRIGGERING ONE NOTE
+  if (triggerOneNote)
+  {
+    Serial.println("PRINTER: ONE NOTE");
     return 44;
-} else if (triggerChaosMode) {
+  }
+
+  // TRIGGERING CHAOS MODE
+  else if (triggerChaosMode) {
+    Serial.println("PRINTER: CHAOS MODE");
     return chaosMode();
-  } else if (triggerChromatic) {
+  }
+
+  // TRIGGERING CHORMATIC MODE
+  else if (triggerChromatic) {
+    Serial.println("PRINTER: CHROMATIC");
       return chroma;
   }
 
    // TRIGGERING SINE MODE
    else if (triggerSine)
    {
-     Serial.println("TAPE: SINE");
+     Serial.println("PRINTER: SINE");
      //return sin(seconds/minutes) * 256;
      if(!triggerModulation) {
       return abs(128 * sin(6 * seconds));
@@ -180,35 +161,35 @@ if (triggerOneNote) {
     // TRIGGERING TANGENT MODE
     else if (triggerTan)
     {
-      Serial.println("TAPE: TANGENT");
+      Serial.println("PRINTER: TANGENT");
       return abs(128 * tan(6 * seconds));
     }
 
-    // TRIGGERING EXPONENTIAL MODE
+    // TRIGGERING LOGARITHMIC MODE
     else if (triggerLog)
     {
-      Serial.println("TAPE: LOGARITHMIC");
+      Serial.println("PRINTER: LOGARITHMIC");
       Serial.println((log(sin(seconds)) + exp(1)) * 60);
       return (log(sin(seconds)) + exp(1)) * 60;
     }
 
     // TRIGGERING SQUARE-ROOT
     else if (triggerSqrt) {
-        Serial.println("TAPE: SQAURE-ROOT");
+        Serial.println("PRINTER: SQAURE-ROOT");
         return sqrt(seconds) * 40;
     }
 
    // TRIGGERING EXPONENTIAL
    else if (triggerEFu)
    {
-      Serial.println("TAPE: EXPONENTIAL");
+      Serial.println("PRINTER: EXPONENTIAL");
       return exp(seconds%5);
    }
 
    // TRIGGERING THE POWER [SIC!]
    else if (triggerPow)
    {
-      Serial.println("TAPE: POWER");
+      Serial.println("PRINTER: POWER");
       int f = 2;
       return pow(abs(seconds - minutes), 2);
    }
@@ -216,7 +197,7 @@ if (triggerOneNote) {
   // TRIGGERING INTER
   else if (triggerInter)
   {
-      Serial.println("FLOPPY: INTER");
+      Serial.println("PRINTER: INTER");
       int step;
       int f = 2;
       step = (0.5 * (minutes + seconds) / 10);
@@ -226,7 +207,7 @@ if (triggerOneNote) {
   // TRIGGERING WEIRD
   else if (triggerWeird)
   {
-      Serial.println("FLOPPY: WEIRD");
+      Serial.println("PRINTER: WEIRD");
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
         return 42;
       } else {
@@ -284,223 +265,18 @@ if (triggerOneNote) {
    return 44;
 }
 
-/* // GENERATE DURATION OF A NOTE
-float Printer::generateTime() {
-  float x;
-
-  if (triggerWeird) {
-      return seconds;
-  }
-
-  if (triggerInter) {
-      int interVal = days/months;
-      return interVal;
-  }
-
-  if (triggerChromatic) {
-      return 20;
-  }
-
-  if (yearIsTime) {
-      return years;
-  }
-
-  if (triggerCadence) {
-      return years / months;
-  }
-
-  if (accelerating) {
-    a = a - months;
-    if (a <= 50) {
-      accelerating = false;
-      decelerating = true;
-    }
-  } else if (decelerating) {
-    (a = a + days);
-    if (a > 500) {
-      accelerating = true;
-      decelerating = false;
-    }
-  } else {
-    a = 0;
-  }
-
-  // PICKING VALUES
-  if (pickTime) {
-      bool method = (bool) random(0,2);
-      if (method) {
-      float Time[] = {50, 75, 100, 125, 150, 175, 200, 250, 300, 400, 500};
-        int i = timestamp >> 28;
-        return Time[i];
-     } else {
-        return months * seconds;
-  }
-}
-
-  // TIME WARP
-  triggerCutTime = getX();
-
-  if (triggerCutTime) {
-    if (triggerJazzy) {
-      x = (3 + (1 / 3));
-    } else {
-      x = 2;
-    }
-  } else {
-    x = 1;
-  }
-
-  if (triggerWeird) {
-      return 0;
-  }
-
-  if (triggerChaosMode) {
-   // return (minutes * seconds) + a;
-      bool oneOrAnother;
-
-      int a = random(0,2);
-
-      if (a < 1) {
-          oneOrAnother = true;
-      } else {
-          oneOrAnother = false;
-      }
-
-
-      if (oneOrAnother) {
-          return (minutes * seconds) + a;
-      } else {
-          return years;
-      }
-  } else if (triggerOneNote || (triggerCadence && !triggerJazzy)) {
-    return ((timestamp >> 22) * x) + a;
-  } else if (triggerCadence && triggerJazzy) {
-    //return ((timestamp >> 20) * x) + a;
-    return ((seconds) * x) + a;
-  } else {
-    return ((timestamp >> 21) * x) + a;
-  }
-
-    if (triggerCadence) {
-      return 50;
-    }
-}
-
-// GENERATE TIME BETWEEN NOTES
-float Printer::generateDelay() {
-  float x;
-
-  if (triggerWeird) {
-      return 0;
-  }
-
-  if (triggerInter) {
-      int interValDel = months/years;
-      return interValDel;
-  }
-
-  if (triggerChromatic) {
-      return 5;
-  }
-
-  // PICKING VALUES
-  if (pickTime) {
-    bool longOrShort = true;
-    int i;
-    float Time[] = {5, 10, 20, 50, 15, 20, 25, 50, 100, 400, 500};
-
-    if (longOrShort) {
-      i = timestamp >> 27;
-    } else {
-      i = timestamp >> 28;
-    }
-
-    return Time[i];
-    Serial.println(Time[i]);
-  }
-
-  if (triggerJazzy) {
-    return 50;
-  }
-
-  if (accelerating) {
-    a = a - 20;
-    if (a <= 50) {
-      accelerating = false;
-      decelerating = true;
-    }
-  } else if (decelerating) {
-    (a = a + 10);
-    if (a > 500) {
-      accelerating = true;
-      decelerating = false;
-    }
-  } else {
-    a = 0;
-  }
-
-  triggerCutTime = getX();
-
-  if (triggerCutTime) {
-    x = 2;
-  } else {
-    x = 1;
-  }
-
-  if (triggerChaosMode) {
-    return (random(10, 100) * x) + a;
-  } else if (triggerOneNote || triggerCadence) {
-    return ((timestamp >> 25) * x) + a;
-  } else {
-    return ((timestamp >> 21) * x) + a;
-  }
-}
-
-// DETERMINING IF TIME WARP SHOULD BE TRIGGERED (TRIGGERCUTTIME)
-bool Printer::getX() {
-  if (count == 0) {
-        return true;
-  } else if (count == 1) {
-        return false;
-  } else if (count == 2) {
-        return true;
-  } else if (count == 3) {
-        return false;
-  } else {
-        return false;
-  }
-return false;
-} */
-
-// CHAOS MODE
+/*************************************************
+CHAOSMODE()
+GENERATING PITCH WITH CHAOS
+INPUT: NONE
+OUTPUT: RETURNS MIDI VALUE, INTEGER
+*************************************************/
 int Printer::chaosMode() {
   return random(0, 144);
 }
 
 // SILENCE THE DRIVE
 void Printer::sendNull() {
-    /*n0 = 0;
-    n1 = 0;
-    n2 = 0;
-    n3 = 0;
-    n4 = 0;
-    n5 = 0;
-    n6 = 0;
-    n7 = 0;
-    strobe = 1;
-    autofd = 1;
-
-    PRINTER_SERIAL.write(n0);
-    PRINTER_SERIAL.write(n1);
-    PRINTER_SERIAL.write(n2);
-    PRINTER_SERIAL.write(n3);
-    PRINTER_SERIAL.write(n4);
-    PRINTER_SERIAL.write(n5);
-    PRINTER_SERIAL.write(n6);
-    PRINTER_SERIAL.write(n7);
-    PRINTER_SERIAL.write(strobe);
-    PRINTER_SERIAL.write(autofd);*/
-
     int nix = 0;
     PRINTER_SERIAL.write(nix);
 }
@@ -517,37 +293,14 @@ void Printer::generateB() {
     count++;
   }
 
-  if (!bTriggered) {
-    b = timestamp >> 28;
-    bTriggered = true;
-  } else {
-      //PICKING A VALUE
-      b = b + Steps[i];
-  }
-}
 
-/*void Printer::doTimeshift () {
-  if (timeshift) {
-      int i = timestamp % 7;
-      //int i = random(0,2);
+/*************************************************
+CHAOSMODE()
+READING INPUTS AND CHOOSING MODE
+INPUT: NONE
+OUTPUT: NONE
+*************************************************/
 
-    count = count + i;
-  }
-
-  if (b == 6 || b == -4) {
-    count = count + 1;
-    b++;
-  }
-
-  if (b == 2) {
-    count = 3;
-    b = 0;
-  }
-}*/
-
-
-// READ INPUTS
-// CHOOSING MODE
 void Printer::findMode() {
     // LEVER SWITCH #1
     if(modeOne == 1) {

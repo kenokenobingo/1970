@@ -36,15 +36,13 @@ void setup() {
 }
 
 void loop() {
-  /*if (Serial.available() > 0) {
+  if (Serial.available() > 0) {
     message = Serial.read();
     digitalWrite(13, HIGH);
-  }*/
-
-  PWM_out_level = 120;
+  }
 
   //PWM_out_level = map(message, 0, 128, 0, 128);
-  //PWM_out_level = message;
+  PWM_out_level = message;
   Serial.println(message);
 
   analogWrite(PWM_out_pin, PWM_out_level);

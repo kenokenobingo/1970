@@ -113,6 +113,7 @@ class Floppy {
     bool triggerWeird;
     bool triggerInter;
     bool triggerMelody;
+    bool triggerPanicMode;
     bool pickTime;
     bool accelerating;
     bool decelerating;

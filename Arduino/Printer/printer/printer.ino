@@ -47,6 +47,8 @@ byte autofdNumber;
 byte message;
 int globalCount;
 
+bool wrong = false;
+
 
 /*************************************************
   SETUP()
@@ -89,10 +91,30 @@ void setup() {
 
 void loop() {
   if (Serial.available() > 0) {
+    const int factor = 12;
+    
     message = Serial.read();
     digitalWrite(13, HIGH);
 
-    delay(message * 15);
+    if(wrong)
+    {
+      delay (0);
+    }
+    
+    if (message > 120)
+    {
+       delay(message * factor);
+       wrong = false;
+    }
+    else if (message > 40 && message < 60) {
+      delay(message * message);
+      wrong = false;
+    }
+    else
+    {
+      delay(10);
+      wrong = true;
+    }
   }
 
   /*n0 = message & 512;

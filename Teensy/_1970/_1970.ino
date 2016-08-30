@@ -166,9 +166,8 @@ void loop() {
   floppy.main(now.unixtime(), now.second(), now.minute(), now.hour(), now.day(), now.month(), now.year(), modeOne, modeTwo, modeThree, valueOne, valueTwo, valueThree, statusOne, statusTwo, statusThree, statusFour);
   printer.main(now.unixtime(), now.second(), now.minute(), now.hour(), now.day(), now.month(), now.year(), modeOne, modeTwo, modeThree, valueOne, valueTwo, valueThree, statusOne, statusTwo, statusThree, statusFour);
   tape.main(now.unixtime(), now.second(), now.minute(), now.hour(), now.day(), now.month(), now.year(), modeOne, modeTwo, modeThree, valueOne, valueTwo, valueThree, statusOne, statusTwo, statusThree, statusFour);
-  Serial.println(now.second());
 
-  analogWrite(vuPin, map(sin(0.2*now.second()), -1, 1, 0, 25));
+  analogWrite(vuPin, map(now.second(), 0, 60, 0, 25));
 
   output();
 
