@@ -120,7 +120,6 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
   // INTERNAL LED ON
   digitalWrite(13, HIGH);
 
-
   // PLAYING NOTES BACKWARDS
   if (backwards) {
     if (count > 0) {
@@ -173,6 +172,11 @@ OUTPUT: RETURNS MIDI VALUE, INTEGER
 *************************************************/
 
 int Floppy::generateMIDI() {
+  if (triggerPanicMode)
+  {
+    Serial.println("FLOPPY: PANIC MODE");
+    return panicMode();
+  }
 
   // TRIGGERING CHAOS MODE
   if (triggerChaosMode)
@@ -360,6 +364,12 @@ OUTPUT: RETURNS DURATION OF A NOTE, FLOAT
 float Floppy::generateTime() {
   float x;
 
+  if(triggerPanicMode)
+  {
+    const int v = 30;
+    return v;
+  }
+
   if (triggerWeird) {
       return seconds;
   }
@@ -370,7 +380,7 @@ float Floppy::generateTime() {
   }
 
   if (triggerChromatic) {
-      return 20;
+      return 30;
   }
 
   if (triggerLog) {
@@ -499,6 +509,12 @@ float Floppy::generateTime() {
 float Floppy::generateDelay() {
   float x;
 
+  if (triggerPanicMode)
+  {
+    int v = 0;
+    return v;
+  }
+
   if (triggerMelody) {
       int f = 10;
       return hours * f;
@@ -599,6 +615,20 @@ return false;
 
 
 /************************************************
+PANICMODE()
+CHAOS MODE
+INPUT: NONE
+OUTPUT: RETURNS MIDI VALUE FOR PITCH, INTEGER
+*************************************************/
+
+int Floppy::panicMode()
+{
+  const int val = 44;
+  return val;
+}
+
+
+/************************************************
 CHAOSMODE()
 CHAOS MODE
 INPUT: NONE
@@ -688,6 +718,12 @@ void Floppy::doTimeshift () {
 // READ INPUTS
 // CHOOSING MODE
 void Floppy::findMode() {
+
+    if(modeOne = 1 && modeTwo == 1 && modeThree == 1 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
+    {
+        triggerPanicMode = true;
+    }
+
     // LEVER SWITCH #1
     if(modeOne == 1) {
       triggerCadence = true;

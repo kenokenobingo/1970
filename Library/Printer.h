@@ -2,7 +2,7 @@
 
 
 ==================================================
-                      1970      
+                      1970
 ==================================================
 
 
@@ -37,26 +37,26 @@ class Printer {
     void sendNull();
     void generateB();
     void doTimeshift();
-    
+
     int modeOne;
     int modeTwo;
     int modeThree;
-    
+
     int valueOne;
     int valueTwo;
     int valueThree;
-        
+
     int statusOne;
     int statusTwo;
     int statusThree;
     int statusFour;
-    
+
     bool turnOne;
     bool turnTwo;
     bool turnThree;
     bool turnFour;
     bool turnFive;
-    
+
     int timestamp;
     int seconds;
     int minutes;
@@ -64,7 +64,7 @@ class Printer {
     int days;
     int months;
     int years;
-    
+
     int message = 25;
     float playTime;
     float delayTime;
@@ -78,6 +78,7 @@ class Printer {
 
     // COMPOSITION BOOLEANS
     bool device_reset;
+    bool triggerPanicMode;
     bool triggerChaosMode;
     bool triggerOneNote;
     bool triggerCadence;
@@ -103,7 +104,7 @@ class Printer {
     bool improvisation;
     bool minor;
     bool yearIsTime;
-    
+
     /*
     // PIN BYTES
     byte n0;

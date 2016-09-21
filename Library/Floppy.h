@@ -31,6 +31,7 @@ class Floppy {
     float generateTime();
     float generateDelay();
     bool getX();
+    int panicMode();
     int chaosMode();
     void sendNull();
     void generateB();

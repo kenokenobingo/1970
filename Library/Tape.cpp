@@ -35,7 +35,7 @@ Tape::Tape(){
 }
 
 // <<DESTRUCTOR>>
-Tape::~Tape(){ /* NOTHING TO DESTRUCT */ }
+Tape::~Tape() { /* NOTHING TO DESTRUCT */ }
 
 void Tape::main(int abc, int sec, int min, int h, int d, int m, int y, int modOne, int modTwo, int modThree, int vOne, int vTwo, int vThree, int statOne, int statTwo, int statThree, int statFour) {
 
@@ -62,7 +62,8 @@ void Tape::main(int abc, int sec, int min, int h, int d, int m, int y, int modOn
 
     findMode();
 
-  while (device_reset == 0) {
+  while (device_reset == 0)
+  {
     TAPE_SERIAL.write(nix);
     digitalWrite(13, LOW);
 
@@ -117,23 +118,28 @@ void Tape::main(int abc, int sec, int min, int h, int d, int m, int y, int modOn
 
   doTimeshift();
 
-  // RE-CALCULATE TIME
-  playTime = playTime + map(valueOne, 0, 1023, -100, 100);
-  delayTime = delayTime + map(valueTwo, 0, 1023, -100, 100);
+  const int minPlayTime = -20;
+  const int maxPlayTime = 20;
+  const int minDelayTime = -20;
+  const int maxDelayTime = 20;
 
- /* // SUSATAIN NOTE
+  // RE-CALCULATE TIME
+  playTime = playTime + map(valueOne, 0, 1023, minPlayTime, maxPlayTime);
+  delayTime = delayTime + map(valueTwo, 0, 1023, -minPlayTime, maxPlayTime);
+
+  // SUSATAIN NOTE
   delay(playTime);
 
   // SILENCE THE DRIVE
-  sendNull();
+  //sendNull();
 
   // SUSTAIN SILENCE
-  delay(delayTime); */
+  delay(delayTime);
 
 /*
   TAPE_SERIAL.write(pin);
   TAPE_SERIAL.write(nix); */
-  TAPE_SERIAL.write(nix);
+  //TAPE_SERIAL.write(nix);
 
   // INTERNAL LED OFF
   digitalWrite(13, LOW);
@@ -147,6 +153,12 @@ INPUT: NONE
 OUTPUT: RETURNS MIDI VALUE
 *************************************************/
 int Tape::generateMIDI() {
+
+    if (triggerPanicMode)
+    {
+      Serial.println("TAPE: PANIC MODE");
+      return panicMode();
+    }
 
     // TRIGGERING CHAOS MODE
     if (triggerChaosMode)
@@ -230,7 +242,7 @@ int Tape::generateMIDI() {
    else if (triggerBreak)
    {
       Serial.println("TAPE: BREAK");
-      for(int i=0; i<=seconds+months; i++) {
+      for (int i=0; i<=seconds+months; i++) {
       return seconds * 2;
       }
       return 0;
@@ -383,6 +395,13 @@ if (counting == 1 || counting == 2) {
       return 190;
 }
 
+// CHAOS MODE
+// OUTPUT: RETURNS MIDI VALUE FOR PITCH
+int Tape::panicMode() {
+  int midiMin = 0;
+  int midiMax = 127;
+  return random(midiMin, midiMax);
+}
 
 // CHAOS MODE
 // OUTPUT: RETURNS MIDI VALUE FOR PITCH
@@ -444,6 +463,13 @@ void Tape::doTimeshift () {
 // READ INPUTS
 // CHOOSING MODE
 void Tape::findMode() {
+
+    if(modeOne = 1 && modeTwo == 1 && modeThree == 1 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
+    {
+        Serial.println("TAPE ACTIVIATED.");
+        triggerPanicMode = true;
+    }
+
     // LEVER SWITCH #1
     if(modeOne == 1) {
       triggerHickHack = true;
@@ -520,4 +546,252 @@ void Tape::findMode() {
       minor = false;
       Serial.println("MINOR DEACTIVATED.");
   }
+}
+
+/*************************************************
+GENERATETIME()
+GENERATING DURATION OF A NOTE
+INPUT: NONE
+OUTPUT: RETURNS DURATION OF A NOTE, FLOAT
+*************************************************/
+
+float Tape::generateTime() {
+  float x;
+
+  if (triggerWeird) {
+      return seconds * 0.5;
+  }
+
+  if (triggerInter) {
+      int interVal = days/months;
+      return interVal;
+  }
+
+  if (triggerChromatic) {
+      return 5;
+  }
+
+  if (triggerLog) {
+      return log(seconds);
+  }
+
+  if (yearIsTime) {
+      return years;
+  }
+
+  if (triggerSine) {
+      const int yearDays = 365;
+      return abs(yearDays * sin(years));
+  }
+
+  // TRIGGERING THE POWER [SIC!]
+  if (triggerPow) {
+      int f = 2;
+      return pow(abs(seconds - minutes), f);
+  }
+
+  if (triggerTan) {
+      return abs(365 * tan(years));
+  }
+
+  if (triggerLog) {
+      return 365 * log(years);
+  }
+
+  if (triggerSqrt) {
+      return sqrt(years) + 365;
+  }
+
+  if (triggerEFu) {
+      return exp(years % 2) + years;
+  }
+
+  if (triggerCadence) {
+      return years / months;
+  }
+
+  if (triggerMelody) {
+      int f = 50;
+      return hours * f;
+  }
+
+  if (accelerating) {
+    a = a - months;
+    if (a <= 50) {
+      accelerating = false;
+      decelerating = true;
+    }
+  } else if (decelerating) {
+    (a = a + days);
+    if (a > 500) {
+      accelerating = true;
+      decelerating = false;
+    }
+  } else {
+    a = 0;
+  }
+
+  // PICKING VALUES
+  if (pickTime) {
+      bool method = (bool) random(0,2);
+      if (method) {
+      Serial.println("TAPE: PICKTIME TIMESTAMP");
+      float Time[] = {50, 75, 100, 125, 150, 175, 200, 250, 300, 400, 500};
+        int i = timestamp >> 28;
+        return Time[i];
+     } else {
+        Serial.println("TAPE: PICKTIME MONTHS");
+        return months * seconds;
+  }
+}
+
+  // TIME WARP
+  triggerCutTime = getX();
+
+  if (triggerCutTime) {
+    if (triggerJazzy) {
+      x = (3 + (1 / 3));
+    } else {
+      x = 2;
+    }
+  } else {
+    x = 1;
+  }
+
+  if (triggerWeird) {
+      return 0;
+  }
+
+  if (triggerChaosMode) {
+   // return (minutes * seconds) + a;
+      bool oneOrAnother;
+
+      int a = random(0,2);
+
+      if (a < 1) {
+          oneOrAnother = true;
+      } else {
+          oneOrAnother = false;
+      }
+
+
+      if (oneOrAnother) {
+          return (minutes * seconds) + a;
+      } else {
+          return years;
+      }
+  } else if (triggerOneNote || (triggerCadence && !triggerJazzy)) {
+    return ((timestamp >> 22) * x) + a;
+  } else if (triggerCadence && triggerJazzy) {
+    //return ((timestamp >> 20) * x) + a;
+    return ((seconds) * x) + a;
+  } else {
+    return ((timestamp >> 21) * x) + a;
+  }
+
+    if (triggerCadence) {
+      return 50;
+    }
+}
+
+// GENERATE TIME BETWEEN NOTES
+float Tape::generateDelay() {
+  float x;
+
+  if (triggerMelody) {
+      int f = 10;
+      return hours * f;
+  }
+
+  if (triggerSine) {
+      return 0;
+  }
+
+  if (triggerWeird) {
+      return 100;
+  }
+
+  if (triggerInter) {
+      int interValDel = months/years;
+      return interValDel;
+  }
+
+  if (triggerChromatic) {
+      return 5;
+  }
+
+  // PICKING VALUES
+  if (pickTime) {
+    bool longOrShort = true;
+    int i;
+    float Time[] = {5, 10, 20, 50, 15, 20, 25, 50, 100, 400, 500};
+
+    if (longOrShort) {
+      i = timestamp >> 27;
+    } else {
+      i = timestamp >> 28;
+    }
+
+    return Time[i];
+    Serial.println(Time[i]);
+  }
+
+  if (triggerJazzy) {
+    return 10;
+  }
+
+  if (accelerating) {
+    a = a - 20;
+    if (a <= 50) {
+      accelerating = false;
+      decelerating = true;
+    }
+  } else if (decelerating) {
+    (a = a + 10);
+    if (a > 500) {
+      accelerating = true;
+      decelerating = false;
+    }
+  } else {
+    a = 0;
+  }
+
+  triggerCutTime = getX();
+
+  if (triggerCutTime) {
+    x = 2;
+  } else {
+    x = 1;
+  }
+
+  if (triggerChaosMode) {
+    return (random(10, 100) * x) + a;
+  } else if (triggerOneNote || triggerCadence) {
+    return ((timestamp >> 25) * x) + a;
+  } else {
+    return ((timestamp >> 21) * x) + a;
+  }
+}
+
+
+/************************************************
+GETX()
+DETERMINING IF TIME WARP SHOULD BE TRIGGERED (TRIGGERCUTTIME)
+INPUT: NONE
+OUTPUT: TRIGGER TRUE OR FALSE, BOOLEAN
+*************************************************/
+
+bool Tape::getX() {
+  if (count == 0) {
+        return true;
+  } else if (count == 1) {
+        return false;
+  } else if (count == 2) {
+        return true;
+  } else if (count == 3) {
+        return false;
+  } else {
+        return false;
+  }
+return false;
 }

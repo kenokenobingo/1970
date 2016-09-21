@@ -31,6 +31,7 @@ class Tape {
     float generateTime();
     float generateDelay();
     bool getX();
+    int panicMode();
     int chaosMode();
     void sendNull();
     void generateB();
@@ -107,6 +108,7 @@ class Tape {
     // COMPOSITION BOOLEANS
     bool device_reset;
     bool triggerChaosMode;
+    bool triggerPanicMode;
     bool triggerHickHack;
     bool triggerBreak;
     bool triggerStutter;

@@ -18,6 +18,7 @@
 
 #include <RTClib.h>
 #include <Wire.h>
+#include <TimerOne.h>
 
 #include <Floppy.h>
 #include <Printer.h>
@@ -71,8 +72,12 @@ const int vuPin = 20;
 // BUILT-IN LED
 const int bLED = 13;
 
+// LED STATE
+int ledState = LOW;
+volatile unsigned long blinkCount = 0;
+
 // BOUNCE
-volatile unsigned long oldTime = 0, bounceTime = 1000;
+volatile unsigned long oldTime = 0, bounceTime = 200;
 
 /* SETUP */
 void setup() {
@@ -159,6 +164,9 @@ void setup() {
   {
     modeThree = 1;
   }
+
+  Timer1.initialize(150000);
+  Timer1.attachInterrupt(blinkLED); // blinkLED to run every 0.15 seconds
 }
 
 void loop() {
@@ -180,6 +188,7 @@ void loop() {
   Serial.println(valueThree);
 
   buttons();
+  checkPanicMode();
 }
 
 void buttons() {
@@ -252,50 +261,71 @@ void triggerSwitchOne()
 
 void triggerSwitchTwo()
 {
-  Serial.println("TWO CHANGING.");
-  if (statusTwo == 1)
+  if ((millis() - oldTime) > bounceTime)
   {
-    statusTwo = 0;
-    digitalWrite(11, LOW);
+    Serial.println("TWO CHANGING.");
+    if (statusTwo == 1)
+    {
+      statusTwo = 0;
+      digitalWrite(11, LOW);
+    }
+    else
+    {
+      statusTwo = 1;
+      digitalWrite(11, HIGH);
+    }
   }
-  else
-  {
-    statusTwo = 1;
-    digitalWrite(11, HIGH);
-  }
+  else {}
+  sei();
+  interrupts();
+  oldTime = millis();
 }
 
 void triggerSwitchThree()
 {
-  Serial.println("THREE CHANGING.");
-  if (statusThree == 1)
+  if ((millis() - oldTime) > bounceTime)
   {
-    statusThree = 0;
-    digitalWrite(12, LOW);
+    Serial.println("THREE CHANGING.");
+    if (statusThree == 1)
+    {
+      statusThree = 0;
+      digitalWrite(12, LOW);
+    }
+    else
+    {
+      statusThree = 1;
+      digitalWrite(12, HIGH);
+    }
   }
-  else
-  {
-    statusThree = 1;
-    digitalWrite(12, HIGH);
-  }
+  else {}
+  sei();
+  interrupts();
+  oldTime = millis();
 }
 
 
 void triggerSwitchFour()
 {
-  Serial.println("FOUR CHANGING.");
-  if (statusFour == 1)
+  if ((millis() - oldTime) > bounceTime)
   {
-    statusFour = 0;
-    digitalWrite(5, LOW);
-    digitalWrite(12, LOW);
+    Serial.println("FOUR CHANGING.");
+    if (statusFour == 1)
+    {
+      statusFour = 0;
+      digitalWrite(5, LOW);
+      digitalWrite(12, LOW);
+    }
+    else
+    {
+      statusFour = 1;
+      digitalWrite(5, HIGH);
+      digitalWrite(12, HIGH);
+    }
   }
-  else
-  {
-    statusFour = 1;
-    digitalWrite(5, HIGH);
-    digitalWrite(12, HIGH);
-  }
+  else {}
+  sei();
+  interrupts();
+  oldTime = millis();
 }
 
 
@@ -326,5 +356,30 @@ void output()
   Serial.println(printer.message);
   Serial.println("MESSAGES END");
   Serial.println("============");
+}
+
+void checkPanicMode()
+{
+  if (modeOne == 1 && modeTwo == 1 && modeThree == 1 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
+  {
+    Timer1.start();
+  }
+  else
+  {
+    Timer1.stop(); 
+  }
+}
+
+void blinkLED(void)
+{
+  if (ledState == LOW) {
+    ledState = HIGH;
+    blinkCount = blinkCount + 1;  // increase when LED turns on
+  } else {
+    ledState = LOW;
+  }
+  digitalWrite(ledOne, ledState);
+  digitalWrite(ledTwo, ledState);
+  digitalWrite(ledThree, ledState);
 }
 

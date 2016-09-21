@@ -78,6 +78,8 @@ void setup() {
   t.every(1500, funnyThing);
   t.every(2500, trololo);
   t.every(60, doIt);
+
+  digitalWrite(autofd, HIGH);
 }
 
 

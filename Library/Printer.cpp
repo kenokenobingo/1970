@@ -127,6 +127,12 @@ OUTPUT: RETURNS MIDI VALUE, INTEGER
 
 int Printer::generateMIDI()
 {
+  if (triggerPanicMode)
+  {
+    Serial.println("PRINTER: PANIC MODE");
+    return 0;
+  }
+
   // TRIGGERING ONE NOTE
   if (triggerOneNote)
   {
@@ -296,6 +302,7 @@ void Printer::generateB() {
     bTriggered = false;
     count++;
   }
+}
 
 
 /*************************************************
