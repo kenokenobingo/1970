@@ -147,8 +147,8 @@ void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int mod
   doTimeshift();
 
   // RE-CALCULATE TIME
-  playTime = playTime + map(valueOne, 0, 100, -100, 100);
-  delayTime = delayTime + map(valueTwo, 0, 1023, -100, 100);
+  playTime = playTime + map(valueOne, 0, 100, -200, 200);
+  delayTime = delayTime + map(valueTwo, 0, 1023, -200, 200);
 
   // SUSATAIN NOTE
   delay(playTime);
@@ -240,8 +240,14 @@ int Floppy::generateMIDI() {
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
         return 42;
       } else {
+        int num = (int) random(0,1);
         int root;
-        root = (int) sqrt(years + seconds + minutes + hours);
+
+        if (num == 1) {
+          root = (int) sqrt(years + seconds + minutes + hours);
+        } else {
+          root = (int) sin(80 * sqrt(years + seconds + minutes + hours));
+        }
         return root;
       }
   }
