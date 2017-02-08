@@ -134,7 +134,7 @@ void Tape::main(int abc, int sec, int min, int h, int d, int m, int y, int modOn
   //sendNull();
 
   // SUSTAIN SILENCE
-  delay(delayTime);
+  //delay(delayTime);
 
 /*
   TAPE_SERIAL.write(pin);
@@ -398,8 +398,8 @@ if (counting == 1 || counting == 2) {
 // CHAOS MODE
 // OUTPUT: RETURNS MIDI VALUE FOR PITCH
 int Tape::panicMode() {
-  int midiMin = 0;
-  int midiMax = 127;
+  int midiMin = 125;
+  int midiMax = 128;
   return random(midiMin, midiMax);
 }
 

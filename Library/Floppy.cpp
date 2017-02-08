@@ -178,6 +178,37 @@ int Floppy::generateMIDI() {
     return panicMode();
   }
 
+  else if (triggerSilence)
+  {
+    Serial.println("FLOPPY: SILENCE");
+    return 0;
+  }
+
+  // TRIGGERING MELODY
+  else if (triggerMelody) {
+     Serial.println("FLOPPY: MELODY");
+     Serial.println("MC" + melodyCount);
+     if (melodyCount == 1 || melodyCount == 2 || melodyCount == 7) {
+        Serial.println("M: 46");
+        melodyCount++;
+        return 46;
+     } else if (melodyCount == 3 || melodyCount == 6) {
+        Serial.println("M: 47");
+        melodyCount++;
+        return 47;
+     } else if (melodyCount == 4 || melodyCount == 5) {
+        Serial.println("M: 49");
+        melodyCount++;
+        return 49;
+      } else {
+        Serial.println("M: RESET");
+        melodyCount = 1;
+        return 44;
+      }
+
+      return 0;
+  }
+
   // TRIGGERING CHAOS MODE
   if (triggerChaosMode)
   {
@@ -322,31 +353,6 @@ int Floppy::generateMIDI() {
     } else if (count == 3) {
       return 60 - 12 + b;
     }
-  }
-
-  // TRIGGERING MELODY
-  else if (triggerMelody) {
-     Serial.println("FLOPPY: MELODY");
-     Serial.println("MC" + melodyCount);
-     if (melodyCount == 1 || melodyCount == 2 || melodyCount == 7) {
-        Serial.println("M: 46");
-        melodyCount++;
-        return 46;
-     } else if (melodyCount == 3 || melodyCount == 6) {
-        Serial.println("M: 47");
-        melodyCount++;
-        return 47;
-     } else if (melodyCount == 4 || melodyCount == 5) {
-        Serial.println("M: 49");
-        melodyCount++;
-        return 49;
-      } else {
-        Serial.println("M: RESET");
-        melodyCount = 1;
-        return 44;
-      }
-
-      return 0;
   }
 
    // FALLBACK
@@ -722,6 +728,19 @@ void Floppy::findMode() {
     if(modeOne = 1 && modeTwo == 1 && modeThree == 1 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
     {
         triggerPanicMode = true;
+    }
+
+    if(modeOne = 2 && modeTwo == 2 && modeThree == 2 && statusOne == 0 && statusTwo == 0 && statusThree == 0 && statusFour == 0)
+    {
+        triggerPanicMode = false;
+        triggerSilence = true;
+    }
+
+    if(modeOne = 1 && modeTwo == 2 && modeThree == 2 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
+    {
+        triggerPanicMode = false;
+        triggerSilence = false;
+        accelerating = true;
     }
 
     // LEVER SWITCH #1

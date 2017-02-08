@@ -99,6 +99,7 @@ class Floppy {
     // COMPOSITION BOOLEANS
     bool device_reset;
     bool triggerChaosMode;
+    bool triggerSilence;
     bool triggerOneNote;
     bool triggerCadence;
     bool triggerSine;

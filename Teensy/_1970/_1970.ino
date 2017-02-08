@@ -135,36 +135,10 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt (switchThree), triggerSwitchThree, FALLING);
   attachInterrupt(digitalPinToInterrupt (switchFour), triggerSwitchFour, FALLING);
 
-  delay(10);
+  delay(100);
 
-  // INITIALISE LEVER SWITCHES
-  if (digitalRead(leverOne) == LOW)
-  {
-    modeOne = 2;
-  }
-  else if (digitalRead(leverOne) == HIGH)
-  {
-    modeOne = 1;
-  }
-
-  if (digitalRead(leverTwo) == LOW)
-  {
-    modeTwo = 2;
-  }
-  else if (digitalRead(leverTwo) == HIGH)
-  {
-    modeTwo = 1;
-  }
-
-  if (digitalRead(leverThree) == LOW)
-  {
-    modeThree = 2;
-  }
-  else if (digitalRead(leverThree) == HIGH)
-  {
-    modeThree = 1;
-  }
-
+  initialise();
+  
   Timer1.initialize(150000);
   Timer1.attachInterrupt(blinkLED); // blinkLED to run every 0.15 seconds
 }
@@ -366,7 +340,7 @@ void checkPanicMode()
   }
   else
   {
-    Timer1.stop(); 
+    Timer1.stop();
   }
 }
 
@@ -381,5 +355,36 @@ void blinkLED(void)
   digitalWrite(ledOne, ledState);
   digitalWrite(ledTwo, ledState);
   digitalWrite(ledThree, ledState);
+}
+
+void initialise()
+{
+  // INITIALISE LEVER SWITCHES
+  if (digitalRead(leverOne) == LOW)
+  {
+    modeOne = 2;
+  }
+  else if (digitalRead(leverOne) == HIGH)
+  {
+    modeOne = 1;
+  }
+
+  if (digitalRead(leverTwo) == LOW)
+  {
+    modeTwo = 2;
+  }
+  else if (digitalRead(leverTwo) == HIGH)
+  {
+    modeTwo = 1;
+  }
+
+  if (digitalRead(leverThree) == LOW)
+  {
+    modeThree = 2;
+  }
+  else if (digitalRead(leverThree) == HIGH)
+  {
+    modeThree = 1;
+  }
 }
 
