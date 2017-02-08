@@ -75,6 +75,7 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
     device_reset = 1;
 
     _delay_ms(500);
+    
   }
 
   note = generateMIDI();
