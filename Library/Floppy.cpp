@@ -51,7 +51,6 @@ Floppy::~Floppy(){ /* NOTHING TO DESTRUCT */ }
 
 void Floppy::main(int abc, int sec, int min, int h, int d, int m, int y, int modOne, int modTwo, int modThree, int vOne, int vTwo, int vThree, int statOne, int statTwo, int statThree, int statFour) {
 
-
     timestamp = abc;
     seconds = sec;
     minutes = min;
@@ -174,19 +173,19 @@ OUTPUT: RETURNS MIDI VALUE, INTEGER
 int Floppy::generateMIDI() {
   if (triggerPanicMode)
   {
-    Serial.println("FLOPPY: PANIC MODE");
+    Serial.println("DO FLOPPY: PANIC MODE");
     return panicMode();
   }
 
   else if (triggerSilence)
   {
-    Serial.println("FLOPPY: SILENCE");
+    Serial.println("DO FLOPPY: SILENCE");
     return 0;
   }
 
   // TRIGGERING MELODY
   else if (triggerMelody) {
-     Serial.println("FLOPPY: MELODY");
+     Serial.println("DO FLOPPY: MELODY");
      Serial.println("MC" + melodyCount);
      if (melodyCount == 1 || melodyCount == 2 || melodyCount == 7) {
         Serial.println("M: 46");
@@ -212,21 +211,21 @@ int Floppy::generateMIDI() {
   // TRIGGERING CHAOS MODE
   if (triggerChaosMode)
   {
-     Serial.println("FLOPPY: CHAOS");
+     Serial.println("DO FLOPPY: CHAOS");
      return chaosMode();
   }
 
   // TRIGGERING CHROMATIC
   else if (triggerChromatic)
   {
-      Serial.println("FLOPPY: CHROMATIC");
+      Serial.println("DO FLOPPY: CHROMATIC");
       return chroma;
   }
 
   // TRIGGERING INTER
   else if (triggerInter)
   {
-      Serial.println("FLOPPY: INTER");
+      Serial.println("DO FLOPPY: INTER");
       int step;
       int f = 2;
       step = (0.5 * (minutes + seconds) / 10);
@@ -236,7 +235,7 @@ int Floppy::generateMIDI() {
   // TRIGGERING WEIRD
   else if (triggerWeird)
   {
-      Serial.println("FLOPPY: WEIRD");
+      Serial.println("DO FLOPPY: WEIRD");
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
         return 42;
       } else {
@@ -255,7 +254,7 @@ int Floppy::generateMIDI() {
   // TRIGGERING SINE
   else if (triggerSine)
   {
-      Serial.println("FLOPPY: SINE");
+      Serial.println("DO FLOPPY: SINE");
       if(!triggerModulation) {
          return abs(40 * sin(6 * seconds) + 30);
       } else {
@@ -266,7 +265,7 @@ int Floppy::generateMIDI() {
   // TRIGGERING TANGENT
   else if (triggerTan)
   {
-      Serial.println("FLOPPY: TANGENT");
+      Serial.println("DO FLOPPY: TANGENT");
       if(!triggerModulation) {
          return abs(40 * tan(6 * seconds) + 30);
       } else {
@@ -277,14 +276,14 @@ int Floppy::generateMIDI() {
   // TRIGGERING EXPONENTIAL
   else if (triggerEFu)
   {
-      Serial.println("FLOPPY: EXPONENTIAL");
+      Serial.println("DO FLOPPY: EXPONENTIAL");
       return exp(seconds%5);
   }
 
   // TRIGGERING LOGARITHMIC
   else if (triggerLog)
   {
-      Serial.println("FLOPPY: LOGARITHMIC");
+      Serial.println("DO FLOPPY: LOGARITHMIC");
       Serial.println((log(sin(seconds)) + exp(1)) * 60);
       return (log(sin(seconds)) + exp(1)) * 20;
   }
@@ -292,26 +291,27 @@ int Floppy::generateMIDI() {
   // TRIGGERING SQUARE-ROOT
   else if (triggerSqrt)
   {
-        Serial.println("FLOPPY: SQUARE-ROOT");
+        Serial.println("DO FLOPPY: SQUARE-ROOT");
         return sqrt(seconds) * 40;
   }
 
   // TRIGGERING THE POWER [SIC!]
   else if (triggerPow) {
-      Serial.println("FLOPPY: POWER");
+      Serial.println("DO FLOPPY: POWER");
       return pow(abs(seconds - minutes), 2);
   }
 
   // TRIGGERIN ONE NOTE
   else if (triggerOneNote)
   {
-    Serial.println("FLOPPY: ONE NOTE");
+    Serial.println("DO FLOPPY: ONE NOTE");
     //return (int) timestamp >> 24;
     return 44;
   }
 
   // TRIGGERING CADENCE
   else if (triggerCadence && !blueNote) {
+    Serial.println("DO FLOPPY: CADENCE");
     if (count == 0) {
       generateB();
       return 44 - 12 + b;
@@ -330,7 +330,7 @@ int Floppy::generateMIDI() {
 
   // TRIGGERING JAZZY
   else if (triggerCadence && blueNote) {
-    Serial.println("FLOPPY: JAZZY");
+    Serial.println("DO FLOPPY: JAZZY");
     if (improvisation) {
       int i;
 
@@ -362,7 +362,7 @@ int Floppy::generateMIDI() {
   }
 
    // FALLBACK
-   return 44;
+   return 0;
 }
 
 
@@ -378,12 +378,11 @@ float Floppy::generateTime() {
 
   if(triggerPanicMode)
   {
-    const int v = 30;
-    return v;
+    return seconds/2;
   }
 
   if (triggerWeird) {
-      return seconds;
+      return seconds + hours;
   }
 
   if (triggerInter) {
@@ -537,7 +536,7 @@ float Floppy::generateDelay() {
   }
 
   if (triggerWeird) {
-      return 100;
+      return seconds * hours;
   }
 
   if (triggerInter) {
@@ -731,93 +730,159 @@ void Floppy::doTimeshift () {
 // CHOOSING MODE
 void Floppy::findMode() {
 
-    if(modeOne = 1 && modeTwo == 1 && modeThree == 1 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
-    {
+    /* if(modeOne = 1 && modeTwo == 1 && modeThree == 1 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
+     {
         triggerPanicMode = true;
-    }
-
-    if(modeOne = 2 && modeTwo == 2 && modeThree == 2 && statusOne == 0 && statusTwo == 0 && statusThree == 0 && statusFour == 0)
-    {
+        triggerSilence = false;
+        accelerating = false;
+        backwards = false;
+        triggerJazzy = false;
+    } else if(modeOne = 2 && modeTwo == 2 && modeThree == 2 && statusOne == 0 && statusTwo == 0 && statusThree == 0 && statusFour == 0)
+     {
         triggerPanicMode = false;
         triggerSilence = true;
-    }
-
-    if(modeOne = 1 && modeTwo == 2 && modeThree == 2 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
-    {
+        accelerating = false;
+        backwards = false;
+        triggerJazzy = false;
+    } else if(modeOne = 1 && modeTwo == 2 && modeThree == 2 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
+     {
         triggerPanicMode = false;
         triggerSilence = false;
         accelerating = true;
-    }
+        backwards = false;
+        triggerJazzy = false;
+     } */
 
     // LEVER SWITCH #1
     if(modeOne == 1) {
       triggerCadence = true;
       triggerChaosMode = false;
-      Serial.println("CADENCE ACTIVATED.");
+      triggerSilence = false;
+      backwards = false;
+      triggerPanicMode = false;
+      accelerating = false;
+      triggerJazzy = false;
+      Serial.println("FLOPPY: CADENCE");
   } else if (modeOne == 2) {
-      triggerChaosMode = true;
+      triggerChaosMode = false;
       triggerCadence = false;
-      Serial.println("CHAOS ACTIVATED.");
+      triggerSilence = false;
+      triggerPanicMode = false;
+      backwards = false;
+      accelerating = false;
+      triggerJazzy = false;
+      Serial.println("FLOPPY: ---");
   }
 
   // LEVER SWITCH #2
   if (modeTwo == 1) {
+      triggerSilence = true;
+      triggerChaosMode = false;
+      triggerCadence = false;
+      triggerPanicMode = false;
       backwards = false;
-      Serial.println("BACKWARDS ACTIVATED.");
+      accelerating = false;
+      triggerJazzy = false;
+      Serial.println("FLOPPY: SILENCE");
   } else if (modeTwo == 2) {
-      backwards = true;
-      Serial.println("BACKWARDS DEACTIVATED.");
+      triggerChaosMode = false;
+      triggerCadence = false;
+      triggerSilence = false;
+      triggerPanicMode = false;
+      backwards = false;
+      accelerating = false;
+      triggerJazzy = false;
+      Serial.println("FLOPPY: ---");
   }
 
   // LEVER SWITCH #3
   if (modeThree == 1) {
-      triggerJazzy = true;
-      blueNote = true;
-      Serial.println("JAZZY ACTIVATED.");
-  } else if (modeThree == 2) {
+      triggerMelody = true;
+      triggerPanicMode = false;
       triggerJazzy = false;
+      triggerSilence = false;
+      accelerating = false;
       blueNote = false;
-      Serial.println("JAZZY DEACTIVATED.");
+      minor = false;
+      Serial.println("FLOPPY: MELODY");
+  } else if (modeThree == 2) {
+      triggerMelody = false;
+      triggerPanicMode = false;
+      triggerJazzy = false;
+      accelerating = false;
+      blueNote = false;
+      minor = false;
+      Serial.println("FLOPPY: ---");
   }
 
 
 // PUSH-BUTTON #1
     if (statusOne == 1) {
-        improvisation = true;
-        Serial.println("IMPROVISATION ACTIVATED.");
+        improvisation = false;
+        triggerJazzy = false;
+        triggerPanicMode = false;
+        accelerating = false;
+        minor = false;
+        Serial.println("FLOPPY: IMPROVISATION");
     }
     else if (statusOne == 0) {
         improvisation = false;
-        Serial.println("IMPROVISATION DEACTIVATED.");
+        triggerPanicMode = false;
+        accelerating = false;
+        minor = false;
+        triggerJazzy = false;
+        Serial.println("FLOPPY: ---");
     }
 
 // PUSH-BUTTON #2
   if (statusTwo == 1) {
         triggerOneNote = true;
-        Serial.println("ONE NOTE ACTIVATED.");
+        triggerPanicMode = false;
+        accelerating = false;
+        minor = false;
+        triggerJazzy = false;
+        Serial.println("FLOPPY: ONE NOTE");
   }
   else if (statusTwo == 0) {
         triggerOneNote = false;
-        Serial.println("ONE NOTE DEACTIVATED.");
+        triggerPanicMode = false;
+        accelerating = false;
+        triggerJazzy = false;
+        minor = false;
+        Serial.println("FLOPPY: ---");
   }
 
 // PUSH-BUTTON #3
   if (statusThree == 1) {
       triggerChromatic = true;
-      Serial.println("CHROMATIC ACTIVATED.");
+      triggerPanicMode = false;
+      accelerating = false;
+      triggerJazzy = false;
+      minor = false;
+      Serial.println("FLOPPY: CHROMATIC");
   }
   else if (statusThree == 0) {
       triggerChromatic = false;
-      Serial.println("CHROMATIC DEACTIVATED.");
+      triggerPanicMode = false;
+      accelerating = false;
+      triggerJazzy = false;
+      minor = false;
+      Serial.println("FLOPPY: ---");
   }
 
 // PUSH-BUTTON #4
   if (statusFour == 1) {
       minor = true;
-      Serial.println("MINOR ACTIVATED.");
+      triggerJazzy = false;
+      triggerPanicMode = false;
+      accelerating = false;
+      Serial.println("FLOPPY: MINOR");
   }
   else if (statusFour == 1) {
       minor = false;
-      Serial.println("MINOR DEACTIVATED.");
+      triggerJazzy = false;
+      triggerPanicMode = false;
+      accelerating = false;
+      Serial.println("FLOPPY: ---");
   }
 }

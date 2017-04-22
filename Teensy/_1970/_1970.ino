@@ -167,6 +167,8 @@ void setup() {
 
   Timer1.initialize(150000);
   Timer1.attachInterrupt(blinkLED); // blinkLED to run every 0.15 seconds
+
+  Serial.println("--- SETUP DONE ---");
 }
 
 void loop() {

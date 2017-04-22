@@ -87,7 +87,8 @@ class Printer {
     bool triggerChromatic;
     bool triggerWeird;
     bool triggerInter;
-    bool triggerSine = true;
+    bool triggerSine
+  ;
     bool triggerTan;
     bool triggerEFu;
     bool triggerLog;
@@ -104,20 +105,6 @@ class Printer {
     bool improvisation;
     bool minor;
     bool yearIsTime;
-
-    /*
-    // PIN BYTES
-    byte n0;
-    byte n1;
-    byte n2;
-    byte n3;
-    byte n4;
-    byte n5;
-    byte n6;
-    byte n7;
-    byte strobe;
-    byte autofd;
-    */
 };
 
 #endif

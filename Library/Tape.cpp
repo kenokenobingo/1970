@@ -80,7 +80,7 @@ void Tape::main(int abc, int sec, int min, int h, int d, int m, int y, int modOn
   // PRINT MESSAGE IN THE CONSOLE
   Serial.println(message);
 
-  message = message + map(valueThree, 0, 900, -60, 60);
+  message = message + map(valueThree, 0, 900, -120, 120);
   message = map(message, 0, 128, 0, 255);
   note = microPeriods[message];
   period = note / magicNumber;
@@ -156,21 +156,21 @@ int Tape::generateMIDI() {
 
     if (triggerPanicMode)
     {
-      Serial.println("TAPE: PANIC MODE");
+      Serial.println("DO TAPE: PANIC MODE");
       return panicMode();
     }
 
     // TRIGGERING CHAOS MODE
     if (triggerChaosMode)
     {
-      Serial.println("TAPE: CHAOS");
+      Serial.println("DO TAPE: CHAOS");
       return chaosMode();
     }
 
     // TRIGGERING HICK HACK
     else if (triggerHickHack)
     {
-      Serial.println("TAPE: HICK HACK");
+      Serial.println("DO TAPE: HICK HACK");
       if (seconds == 1 || seconds == 2 || seconds == 3 || seconds == 4 || seconds == 5 || seconds == 30 || seconds == 31 || seconds == 32 || seconds == 33 || seconds == 34 || seconds == 35) {
           return seconds * 2;
       } else {
@@ -182,7 +182,7 @@ int Tape::generateMIDI() {
     // TRIGGERING JUMPING VALUES
     else if (triggerJump)
     {
-      Serial.println("TAPE: JUMP");
+      Serial.println("DO TAPE: JUMP");
 
       int x = months * random(0, months);
       int f = 2;
@@ -193,7 +193,7 @@ int Tape::generateMIDI() {
     // TRIGGERING SINE MODE
     else if (triggerSine)
     {
-      Serial.println("TAPE: SINE");
+      Serial.println("DO TAPE: SINE");
       //return sin(seconds/minutes) * 256;
       if(!triggerModulation) {
          return abs(128 * sin(6 * seconds));
@@ -205,35 +205,35 @@ int Tape::generateMIDI() {
     // TRIGGERING TANGENT MODE
     else if (triggerTan)
     {
-      Serial.println("TAPE: TANGENT");
+      Serial.println("DO TAPE: TANGENT");
       return abs(128 * tan(6 * seconds));
     }
 
     // TRIGGERING EXPONENTIAL MODE
     else if (triggerLog)
     {
-      Serial.println("TAPE: LOGARITHMIC");
+      Serial.println("DO TAPE: LOGARITHMIC");
       Serial.println((log(sin(seconds)) + exp(1)) * 60);
       return (log(sin(seconds)) + exp(1)) * 60;
     }
 
     // TRIGGERING SQUARE-ROOT
     else if (triggerSqrt) {
-        Serial.println("TAPE: SQAURE-ROOT");
+        Serial.println("DO TAPE: SQAURE-ROOT");
         return sqrt(seconds) * 40;
     }
 
    // TRIGGERING EXPONENTIAL
    else if (triggerEFu)
    {
-      Serial.println("TAPE: EXPONENTIAL");
+      Serial.println("DO TAPE: EXPONENTIAL");
       return exp(seconds%5);
    }
 
    // TRIGGERING THE POWER [SIC!]
    else if (triggerPow)
    {
-      Serial.println("TAPE: POWER");
+      Serial.println("DO TAPE: POWER");
       int f = 2;
       return pow(abs(seconds - minutes), 2);
    }
@@ -241,7 +241,7 @@ int Tape::generateMIDI() {
    // TRIGGERING BREAK MODE
    else if (triggerBreak)
    {
-      Serial.println("TAPE: BREAK");
+      Serial.println("DO TAPE: BREAK");
       for (int i=0; i<=seconds+months; i++) {
       return seconds * 2;
       }
@@ -251,7 +251,7 @@ int Tape::generateMIDI() {
     // TRIGGERING STUTTERING MODE
    else if (triggerStutter)
    {
-      Serial.println("TAPE: STUTTER");
+      Serial.println("DO TAPE: STUTTER");
 
       counting++;
       Serial.println(counting);
@@ -271,21 +271,21 @@ int Tape::generateMIDI() {
     // TRIGGERING NOTHING
    else if (triggerNull)
    {
-      Serial.println("TAPE: NULL");
+      Serial.println("DO TAPE: NULL");
       return 0;
    }
 
     // TRIGGERING CHROMATIC MODE
    else if (triggerChromatic)
    {
-      Serial.println("TAPE: CHROMA");
+      Serial.println("DO TAPE: CHROMA");
       return chroma;
    }
 
     // TRIGGERING INTER MODE
    else if (triggerInter)
    {
-      Serial.println("TAPE: INTER");
+      Serial.println("DO TAPE: INTER");
       int step;
       step = seconds / 5 - minutes % 4;
       return months * days + step;
@@ -294,7 +294,7 @@ int Tape::generateMIDI() {
     // TRIGGERING WEIRD MODE
    else if (triggerWeird)
    {
-      Serial.println("TAPE: WEIRD");
+      Serial.println("DO TAPE: WEIRD");
       if (seconds < 60 && seconds > 30) {
           return 42;
       } else {
@@ -305,7 +305,7 @@ int Tape::generateMIDI() {
     // TRIGGERING ONE NOTE MODE
    else if (triggerOneNote)
    {
-    Serial.println("TAPE: ONE NOTE");
+    Serial.println("DO TAPE: ONE NOTE");
     //return (int) timestamp >> 24;
     return 44;
    }
@@ -313,7 +313,7 @@ int Tape::generateMIDI() {
    // TRIGGERING CADENCE MODE
    else if (triggerCadence && !blueNote)
    {
-     Serial.println("TAPE: CADENCE");
+     Serial.println("DO TAPE: CADENCE");
      if (count == 0) {
        generateB();
        return 44 - 12 + b;
@@ -333,7 +333,7 @@ int Tape::generateMIDI() {
    // TRIGGERING JAZZY MODE
    else if (triggerCadence && blueNote)
    {
-      Serial.println("TAPE: JAZZY");
+      Serial.println("DO TAPE: JAZZY");
 
       counting++;
       Serial.println(counting);
@@ -373,7 +373,7 @@ if (counting == 1 || counting == 2) {
       return 60 - 12 + b;
     }
   } else if (triggerMelody) {
-      Serial.println("TAPE: MELODY");
+      Serial.println("DO TAPE: MELODY");
       Serial.println("MC" + melodyCount);
       if (melodyCount == 1 || melodyCount == 2 || melodyCount == 7) {
           melodyCount++;
@@ -464,61 +464,85 @@ void Tape::doTimeshift () {
 // CHOOSING MODE
 void Tape::findMode() {
 
-    if(modeOne = 1 && modeTwo == 1 && modeThree == 1 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
+  /*  if(modeOne = 1 && modeTwo == 1 && modeThree == 1 && statusOne == 1 && statusTwo == 1 && statusThree == 1 && statusFour == 1)
     {
         Serial.println("TAPE ACTIVIATED.");
         triggerPanicMode = true;
-    }
+        triggerHickHack = false;
+        triggerSine = false;
+    } */
 
     // LEVER SWITCH #1
     if(modeOne == 1) {
       triggerHickHack = true;
-      Serial.println("HICKHACK ACTIVATED.");
+      triggerPanicMode = false;
+      triggerSine = false;
+      Serial.println("TAPE: HICKHACK");
   } else if (modeOne == 2) {
       triggerHickHack = false;
-      Serial.println("HICKHACK DEACTIVATED.");
+      triggerPanicMode = false;
+      triggerSine = false;
+      Serial.println("TAPE: ---");
   }
 
   // LEVER SWITCH #2
   if (modeTwo == 1) {
       triggerSine = true;
-      Serial.println("SINE ACTIVATED.");
+      triggerPanicMode = false;
+      triggerHickHack = false;
+      Serial.println("TAPE: SINE");
   } else if (modeTwo == 2) {
       triggerSine = false;
-      Serial.println("SINE DEACTIVATED.");
+      triggerPanicMode = false;
+      triggerHickHack = false;
+      Serial.println("TAPE: ---");
   }
 
   // LEVER SWITCH #3
   if (modeThree == 1) {
       triggerWeird = true;
-      Serial.println("WERID ACTIVATED.");
+      triggerSine = false;
+      triggerPanicMode = false;
+      triggerHickHack = false;
+      Serial.println("TAPE: WEIRD");
   } else if (modeThree == 2) {
       triggerWeird = false;
-      Serial.println("WEIRD DEACTIVATED.");
+      triggerSine = false;
+      triggerPanicMode = false;
+      triggerHickHack = false;
+      Serial.println("TAPE: ---");
   }
 
   // PUSH-BUTTON #1
     if (statusOne == 1)
     {
         improvisation = true;
-        Serial.println("IMPROVISATION ACTIVATED.");
+        Serial.println("TAPE: IMPROVISATION");
     }
     else if (statusOne == 0)
     {
         improvisation = false;
-        Serial.println("IMPROVISATION DEACTIVATED.");
+        Serial.println("TAPE: ---");
     }
 
 // PUSH-BUTTON #2
   if (statusTwo == 1)
   {
         triggerOneNote = true;
-        Serial.println("ONE NOTE ACTIVATED.");
+        triggerWeird = false;
+        triggerSine = false;
+        triggerPanicMode = false;
+        triggerHickHack = false;
+        Serial.println("TAPE: ONE NOTE");
   }
   else if (statusTwo == 0)
   {
         triggerOneNote = false;
-        Serial.println("ONE NOTE DEACTIVATED.");
+        triggerWeird = false;
+        triggerSine = false;
+        triggerPanicMode = false;
+        triggerHickHack = false;
+        Serial.println("TAPE: ---");
   }
 
 // PUSH-BUTTON #3
@@ -527,24 +551,40 @@ void Tape::findMode() {
       triggerChromatic = true;
       triggerHickHack = false;
       triggerSine = false;
-      Serial.println("CHROMATIC ACTIVATED.");
+      triggerWeird = false;
+      triggerPanicMode = false;
+      Serial.println("TAPE: CHROMATIC");
   }
   else if (statusThree == 0)
   {
       triggerChromatic = false;
-      Serial.println("CHROMATIC DEACTIVATED.");
+      triggerWeird = false;
+      triggerSine = false;
+      triggerPanicMode = false;
+      triggerHickHack = false;
+      Serial.println("TAPE: ---");
   }
 
 // PUSH-BUTTON #4
   if (statusFour == 1)
   {
       minor = true;
-      Serial.println("MINOR ACTIVATED.");
+      triggerChromatic = false;
+      triggerWeird = false;
+      triggerSine = false;
+      triggerPanicMode = false;
+      triggerHickHack = false;
+      Serial.println("TAPE: MINOR");
   }
   else if (statusFour == 1)
   {
       minor = false;
-      Serial.println("MINOR DEACTIVATED.");
+      triggerChromatic = false;
+      triggerWeird = false;
+      triggerSine = false;
+      triggerPanicMode = false;
+      triggerHickHack = false;
+      Serial.println("TAPE: ---");
   }
 }
 
@@ -568,7 +608,7 @@ float Tape::generateTime() {
   }
 
   if (triggerChromatic) {
-      return 5;
+      return seconds/hours;
   }
 
   if (triggerLog) {
@@ -663,7 +703,7 @@ float Tape::generateTime() {
   }
 
   if (triggerChaosMode) {
-   // return (minutes * seconds) + a;
+
       bool oneOrAnother;
 
       int a = random(0,2);
@@ -673,7 +713,6 @@ float Tape::generateTime() {
       } else {
           oneOrAnother = false;
       }
-
 
       if (oneOrAnother) {
           return (minutes * seconds) + a;

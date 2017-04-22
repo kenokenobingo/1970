@@ -75,7 +75,7 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
     device_reset = 1;
 
     _delay_ms(500);
-    
+
   }
 
   note = generateMIDI();
@@ -85,7 +85,6 @@ void Printer::main(int abc, int sec, int min, int h, int d, int m, int y, int mo
   message = message + map(valueThree, 0, 900, -60, 60);
 
   digitalWrite(13, HIGH);
-
 
   if (backwards) {
     if (count > 0) {
@@ -130,33 +129,33 @@ int Printer::generateMIDI()
 {
   if (triggerPanicMode)
   {
-    Serial.println("PRINTER: PANIC MODE");
+    Serial.println("DO PRINTER: PANIC MODE");
     return 0;
   }
 
   // TRIGGERING ONE NOTE
   if (triggerOneNote)
   {
-    Serial.println("PRINTER: ONE NOTE");
+    Serial.println(" DO PRINTER: ONE NOTE");
     return 44;
   }
 
   // TRIGGERING CHAOS MODE
   else if (triggerChaosMode) {
-    Serial.println("PRINTER: CHAOS MODE");
+    Serial.println("DO PRINTER: CHAOS MODE");
     return chaosMode();
   }
 
   // TRIGGERING CHORMATIC MODE
   else if (triggerChromatic) {
-    Serial.println("PRINTER: CHROMATIC");
+    Serial.println("DO PRINTER: CHROMATIC");
       return chroma;
   }
 
    // TRIGGERING SINE MODE
    else if (triggerSine)
    {
-     Serial.println("PRINTER: SINE");
+     Serial.println("DO PRINTER: SINE");
      //return sin(seconds/minutes) * 256;
      if(!triggerModulation) {
       return abs(128 * sin(6 * seconds));
@@ -168,35 +167,35 @@ int Printer::generateMIDI()
     // TRIGGERING TANGENT MODE
     else if (triggerTan)
     {
-      Serial.println("PRINTER: TANGENT");
+      Serial.println("DO PRINTER: TANGENT");
       return abs(128 * tan(6 * seconds));
     }
 
     // TRIGGERING LOGARITHMIC MODE
     else if (triggerLog)
     {
-      Serial.println("PRINTER: LOGARITHMIC");
+      Serial.println("DO PRINTER: LOGARITHMIC");
       Serial.println((log(sin(seconds)) + exp(1)) * 60);
       return (log(sin(seconds)) + exp(1)) * 60;
     }
 
     // TRIGGERING SQUARE-ROOT
     else if (triggerSqrt) {
-        Serial.println("PRINTER: SQAURE-ROOT");
+        Serial.println("DO PRINTER: SQAURE-ROOT");
         return sqrt(seconds) * 40;
     }
 
    // TRIGGERING EXPONENTIAL
    else if (triggerEFu)
    {
-      Serial.println("PRINTER: EXPONENTIAL");
+      Serial.println("DO PRINTER: EXPONENTIAL");
       return exp(seconds%5);
    }
 
    // TRIGGERING THE POWER [SIC!]
    else if (triggerPow)
    {
-      Serial.println("PRINTER: POWER");
+      Serial.println("DO PRINTER: POWER");
       int f = 2;
       return pow(abs(seconds - minutes), 2);
    }
@@ -204,7 +203,7 @@ int Printer::generateMIDI()
   // TRIGGERING INTER
   else if (triggerInter)
   {
-      Serial.println("PRINTER: INTER");
+      Serial.println("DO PRINTER: INTER");
       int step;
       int f = 2;
       step = (0.5 * (minutes + seconds) / 10);
@@ -214,7 +213,7 @@ int Printer::generateMIDI()
   // TRIGGERING WEIRD
   else if (triggerWeird)
   {
-      Serial.println("PRINTER: WEIRD");
+      Serial.println("DO PRINTER: WEIRD");
       if (seconds == 60 || seconds == 30 || seconds == 0 || seconds == 15 || seconds == 45) {
         return 42;
       } else {
@@ -318,71 +317,94 @@ void Printer::findMode() {
     if(modeOne == 1) {
       triggerCadence = true;
       triggerChaosMode = false;
-      Serial.println("CADENCE ACTIVATED.");
+      Serial.println("PRINTER: CADENCE");
   } else if (modeOne == 2) {
-      triggerChaosMode = true;
+      triggerChaosMode = false;
       triggerCadence = false;
-      Serial.println("CHAOS ACTIVATED.");
+      Serial.println("PRINTER: ---");
   }
 
   // LEVER SWITCH #2
   if (modeTwo == 1) {
-      backwards = false;
-      Serial.println("BACKWARDS ACTIVATED.");
-  } else if (modeTwo == 2) {
       backwards = true;
-      Serial.println("BACKWARDS DEACTIVATED.");
+      Serial.println("PRINTER: BACKWARDS");
+  } else if (modeTwo == 2) {
+      backwards = false;
+      Serial.println("PRINTER: ---");
   }
 
   // LEVER SWITCH #3
   if (modeThree == 1) {
       triggerJazzy = true;
       blueNote = true;
-      Serial.println("JAZZY ACTIVATED.");
+      Serial.println("PRINTER: JAZZY");
   } else if (modeThree == 2) {
       triggerJazzy = false;
       blueNote = false;
-      Serial.println("JAZZY DEACTIVATED.");
+      Serial.println("PRINTER: ---");
   }
-
 
 // PUSH-BUTTON #1
     if (statusOne == 1) {
         improvisation = true;
-        Serial.println("IMPROVISATION ACTIVATED.");
+        triggerOneNote = false;
+        triggerChromatic = false;
+        minor = false;
+        Serial.println("PRINTER: IMPROVISATION");
     }
     else if (statusOne == 0) {
         improvisation = false;
-        Serial.println("IMPROVISATION DEACTIVATED.");
+        triggerOneNote = false;
+        triggerChromatic = false;
+        minor = false;
+        Serial.println("PRINTER: ---");
     }
 
 // PUSH-BUTTON #2
   if (statusTwo == 1) {
         triggerOneNote = true;
-        Serial.println("ONE NOTE ACTIVATED.");
+        improvisation = false;
+        triggerChromatic = false;
+        minor = false;
+        Serial.println("PRINTER: ONE NOTE");
   }
   else if (statusTwo == 0) {
         triggerOneNote = false;
-        Serial.println("ONE NOTE DEACTIVATED.");
+        improvisation = false;
+        triggerChromatic = false;
+        minor = false;
+        Serial.println("PRINTER: ---");
   }
 
 // PUSH-BUTTON #3
   if (statusThree == 1) {
       triggerChromatic = true;
-      Serial.println("CHROMATIC ACTIVATED.");
+      triggerOneNote = false;
+      improvisation = false;
+      minor = false;
+      Serial.println("PRINTER: CHROMATIC");
   }
   else if (statusThree == 0) {
       triggerChromatic = false;
-      Serial.println("CHROMATIC DEACTIVATED.");
+      triggerOneNote = false;
+      improvisation = false;
+      minor = false;
+      Serial.println("PRINTER: ---");
   }
 
 // PUSH-BUTTON #4
   if (statusFour == 1) {
       minor = true;
-      Serial.println("MINOR ACTIVATED.");
+      triggerOneNote = false;
+      triggerChromatic = false;
+      improvisation = false;
+      Serial.println("PRINTER: MINOR");
   }
   else if (statusFour == 0) {
       minor = false;
-      Serial.println("MINOR DEACTIVATED.");
+      triggerOneNote = false;
+      triggerChromatic = false;
+      improvisation = false;
+      Serial.println("PRINTER: ---");
   }
 }
