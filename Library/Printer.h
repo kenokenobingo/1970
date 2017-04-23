@@ -37,6 +37,30 @@ class Printer {
     void sendNull();
     void generateB();
     void doTimeshift();
+    void goDoThings();
+
+    // PERIODS FOR PLAYING CERTAIN TONES
+    int microPeriods[108] = {
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      30578, 28861, 27242, 25713, 24270, 22909, 21622, 20409, 19263, 18182, 17161, 16198, //C1 - B1
+      15289, 14436, 13621, 12856, 12135, 11454, 10811, 10205, 9632, 9091, 8581, 8099, //C2 - B2
+      7645, 7218, 6811, 6428, 6068, 5727, 5406, 5103, 4816, 4546, 4291, 4050, //C3 - B3
+      3823, 3609, 3406, 3214, 3034, 2864, 2703, 2552, 2408, 2273, 2146, 2025, //C4 - B4
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    };
+
+    int arduinoResoultion = 40;
+    int factor = 10;
+    int counting;
+    int note = 10000;
+    int magicNumber = (arduinoResoultion * 2);
+    int period;
+    float a = -400;
+    float b;
+    float chroma = 25;
 
     int modeOne;
     int modeTwo;
@@ -71,11 +95,6 @@ class Printer {
 
     int count;
 
-    int note = 10;
-    float a = -400;
-    float b;
-    float chroma = 25;
-
     // COMPOSITION BOOLEANS
     bool device_reset;
     bool triggerPanicMode;
@@ -87,8 +106,8 @@ class Printer {
     bool triggerChromatic;
     bool triggerWeird;
     bool triggerInter;
-    bool triggerSine
-  ;
+    bool triggerSine;
+    bool triggerSilence;
     bool triggerTan;
     bool triggerEFu;
     bool triggerLog;

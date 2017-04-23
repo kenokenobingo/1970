@@ -38,6 +38,7 @@ class Tape {
     void doTimeshift();
     void findMode();
     void dodo();
+    void goDoThings();
 
     // TIME VARIABLES
     int timestamp;
@@ -70,7 +71,6 @@ class Tape {
     bool turnThree;
     bool turnFour;
     bool turnFive;
-
 
     int melodyCount = 1;
 
@@ -107,7 +107,7 @@ class Tape {
 
     // COMPOSITION BOOLEANS
     bool device_reset;
-    bool triggerChaosMode;
+    bool triggerChaosMode = true;
     bool triggerPanicMode;
     bool triggerHickHack;
     bool triggerBreak;
@@ -129,6 +129,7 @@ class Tape {
     bool triggerWeird;
     bool triggerInter;
     bool triggerMelody;
+    bool triggerSilence;
     bool pickTime;
     bool accelerating;
     bool decelerating;
@@ -139,12 +140,6 @@ class Tape {
     bool improvisation;
     bool minor;
     bool yearIsTime;
-
-  /*  // VARIABLEN, DIE DURCH DAS INTERFACE GESTEUERT WERDEN
-    float speed; // Abspielgeschwindigkeit
-    float chaosFactor; // Chaosanteil der Komposition
-    float b; // b (siehe bTriggered)
-    float jump; // Sprünge im Takt */
 
 };
 

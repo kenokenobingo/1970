@@ -1,4 +1,4 @@
-  /*************************************************
+/*************************************************
 
 
 ==================================================
@@ -30,13 +30,11 @@ class Floppy {
     int generateMIDI();
     float generateTime();
     float generateDelay();
-    bool getX();
-    int panicMode();
-    int chaosMode();
-    void sendNull();
     void generateB();
     void doTimeshift();
+    void sendNull();
     void findMode();
+    void goDoThings();
 
     int timestamp;
     int seconds;
@@ -96,9 +94,10 @@ class Floppy {
     float chroma = 25;
 
     // COMPOSITION BOOLEANS
+    bool triggerSilence;
+    /* -- */
     bool device_reset;
     bool triggerChaosMode;
-    bool triggerSilence;
     bool triggerOneNote;
     bool triggerCadence;
     bool triggerSine;
@@ -125,6 +124,7 @@ class Floppy {
     bool improvisation;
     bool minor;
     bool yearIsTime;
+
 
     // VARIABLEN, DIE DURCH DAS INTERFACE GESTEUERT WERDEN
     /* float speed = ; // Abspielgeschwindigkeit

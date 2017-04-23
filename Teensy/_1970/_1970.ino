@@ -31,9 +31,9 @@ Tape tape;
 RTC_Millis RTC;
 int nowTime;
 
-volatile int modeOne;
-volatile int modeTwo;
-volatile int modeThree;
+volatile int modeOne = 1;
+volatile int modeTwo = 1;
+volatile int modeThree = 1;
 
 int valueOne;
 int valueTwo;
@@ -124,17 +124,6 @@ void setup() {
   // INTERRUPTS EINRICHTEN
   // HEBELSCHALTER
 
-  //FALLING
-  attachInterrupt(digitalPinToInterrupt (leverOne), triggerLeverOne, CHANGE);
-  attachInterrupt(digitalPinToInterrupt (leverTwo), triggerLeverTwo, CHANGE);
-  attachInterrupt(digitalPinToInterrupt (leverThree), triggerLeverThree, CHANGE);
-
-  // TASTER
-  attachInterrupt(digitalPinToInterrupt (switchOne), triggerSwitchOne, FALLING);
-  attachInterrupt(digitalPinToInterrupt (switchTwo), triggerSwitchTwo, FALLING);
-  attachInterrupt(digitalPinToInterrupt (switchThree), triggerSwitchThree, FALLING);
-  attachInterrupt(digitalPinToInterrupt (switchFour), triggerSwitchFour, FALLING);
-
   delay(10);
 
   // INITIALISE LEVER SWITCHES
@@ -165,6 +154,27 @@ void setup() {
     modeThree = 1;
   }
 
+  /* --- */
+
+  Serial.println(modeOne);
+  Serial.println(modeTwo);
+  Serial.println(modeThree);
+
+  /* --- */
+
+  delay(10);
+
+  //FALLING
+  attachInterrupt(digitalPinToInterrupt (leverOne), triggerLeverOne, CHANGE);
+  attachInterrupt(digitalPinToInterrupt (leverTwo), triggerLeverTwo, CHANGE);
+  attachInterrupt(digitalPinToInterrupt (leverThree), triggerLeverThree, CHANGE);
+
+  // TASTER
+  attachInterrupt(digitalPinToInterrupt (switchOne), triggerSwitchOne, FALLING);
+  attachInterrupt(digitalPinToInterrupt (switchTwo), triggerSwitchTwo, FALLING);
+  attachInterrupt(digitalPinToInterrupt (switchThree), triggerSwitchThree, FALLING);
+  attachInterrupt(digitalPinToInterrupt (switchFour), triggerSwitchFour, FALLING);
+
   Timer1.initialize(150000);
   Timer1.attachInterrupt(blinkLED); // blinkLED to run every 0.15 seconds
 
@@ -173,9 +183,23 @@ void setup() {
 
 void loop() {
   DateTime now = RTC.now();
-  floppy.main(now.unixtime(), now.second(), now.minute(), now.hour(), now.day(), now.month(), now.year(), modeOne, modeTwo, modeThree, valueOne, valueTwo, valueThree, statusOne, statusTwo, statusThree, statusFour);
-  printer.main(now.unixtime(), now.second(), now.minute(), now.hour(), now.day(), now.month(), now.year(), modeOne, modeTwo, modeThree, valueOne, valueTwo, valueThree, statusOne, statusTwo, statusThree, statusFour);
-  tape.main(now.unixtime(), now.second(), now.minute(), now.hour(), now.day(), now.month(), now.year(), modeOne, modeTwo, modeThree, valueOne, valueTwo, valueThree, statusOne, statusTwo, statusThree, statusFour);
+
+  
+  if (modeOne == 1) {
+    Serial.println("!!!! FLOPPY !!!!");
+    floppy.main(now.unixtime(), now.second(), now.minute(), now.hour(), now.day(), now.month(), now.year(), modeOne, modeTwo, modeThree, valueOne, valueTwo, valueThree, statusOne, statusTwo, statusThree, statusFour);
+  }
+
+  if (modeTwo == 1) {
+    Serial.println("!!!! TAPE !!!!");
+    tape.main(now.unixtime(), now.second(), now.minute(), now.hour(), now.day(), now.month(), now.year(), modeOne, modeTwo, modeThree, valueOne, valueTwo, valueThree, statusOne, statusTwo, statusThree, statusFour);
+  }
+
+  if (modeThree == 1) {
+    Serial.println("!!!! PRINTER !!!!");
+    printer.main(now.unixtime(), now.second(), now.minute(), now.hour(), now.day(), now.month(), now.year(), modeOne, modeTwo, modeThree, valueOne, valueTwo, valueThree, statusOne, statusTwo, statusThree, statusFour);
+  }
+
 
   analogWrite(vuPin, map(now.second(), 0, 60, 0, 25));
 
@@ -201,40 +225,49 @@ void buttons() {
 // HEBELSCHALTER
 void triggerLeverThree()
 {
-  Serial.println("THREE FALLING.");
-  if (modeThree == 2)
+  if ((millis() - oldTime) > bounceTime)
   {
-    modeThree = 1;
-  }
-  else
-  {
-    modeThree = 2;
+    Serial.println("THREE FALLING.");
+    if (modeThree == 2)
+    {
+      modeThree = 1;
+    }
+    else if (modeThree == 1)
+    {
+      modeThree = 2;
+    }
   }
 }
 
 void triggerLeverTwo()
 {
-  Serial.println("TWO CHANGING.");
-  if (modeTwo == 2)
+  if ((millis() - oldTime) > bounceTime)
   {
-    modeTwo = 1;
-  }
-  else
-  {
-    modeTwo = 2;
+    Serial.println("TWO CHANGING.");
+    if (modeTwo == 2)
+    {
+      modeTwo = 1;
+    }
+    else if (modeTwo == 1)
+    {
+      modeTwo = 2;
+    }
   }
 }
 
 void triggerLeverOne()
 {
-  Serial.println("ONE CHANGING.");
-  if (modeOne == 2)
+  if ((millis() - oldTime) > bounceTime)
   {
-    modeOne = 1;
-  }
-  else
-  {
-    modeOne = 2;
+    Serial.println("ONE CHANGING.");
+    if (modeOne == 2)
+    {
+      modeOne = 1;
+    }
+    else if (modeOne == 1)
+    {
+      modeOne = 2;
+    }
   }
 }
 
@@ -368,7 +401,7 @@ void checkPanicMode()
   }
   else
   {
-    Timer1.stop(); 
+    Timer1.stop();
   }
 }
 
