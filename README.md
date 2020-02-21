@@ -1,7 +1,7 @@
 # 1970
 
-* Category: Semesterarbeit    
-* Student: Keno Westhoff    
-* Course Title: Computation and Music    
-* Lecturer: Prof. Dennis Paul    
-* Year: WS 2015/16
+Mutating composition played on electronic devices.
+
+Computation and Music    
+Prof. Dennis Paul    
+2015/16
